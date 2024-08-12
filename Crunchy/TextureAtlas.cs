@@ -218,6 +218,7 @@ namespace Crunchy
 
                     WuAlphaColorQuantizer quantizer = new WuAlphaColorQuantizer();
                     ColorQuantizerResult result = quantizer.Quantize(originalBitmap.PixelData, options);
+                    colorPalette = result.ColorPalette;
 
                     image.Image = new Image(originalBitmap.Width, originalBitmap.Height, 8, new Palette(result.ColorPalette), result.Bytes);
                 }
@@ -270,6 +271,7 @@ namespace Crunchy
 
         public static async Task ProcessLayoutFile(string fileName)
         {
+            string appPath = System.Windows.Forms.Application.StartupPath;
             string workingPath = Path.GetDirectoryName(fileName);
             List<ImageNode> imageList = new List<ImageNode>();
             List<SliceNode> sliceList = new List<SliceNode>();
@@ -280,8 +282,21 @@ namespace Crunchy
             string destinationDirectory = iniFile.GetValue("General", "DestinationDirectory");
             string outputFileName = iniFile.GetValue("General", "OutputFileName");
             Size outputSize = iniFile.GetValue<Size>("General", "OutputSize");
-            settings.PaletteFileName = iniFile.GetValue("General", "PaletteFileName");
-            settings.ColorPalette = await PalFile.Read(settings.PaletteFileName);
+            string paletteFileName = iniFile.GetValue("General", "PaletteFileName");
+
+            if (!String.IsNullOrEmpty(paletteFileName))
+            {
+                GetFullPath(workingPath, ref paletteFileName);
+
+                if (!File.Exists(paletteFileName))
+                {
+                    paletteFileName = iniFile.GetValue("General", "PaletteFileName");
+                    GetFullPath(appPath, ref paletteFileName);
+                }
+
+                settings.ColorPalette = await PalFile.Read(paletteFileName);
+            }
+
             settings.SwapMagentaWithTransparentIndex = iniFile.GetValue<bool>("General", "SwapMagentaWithTransparentIndex", true);
             settings.SortSizes = iniFile.GetValue<bool>("General", "SortSizes", true);
             settings.SortColors = iniFile.GetValue<bool>("General", "SortColors", true);
@@ -292,29 +307,9 @@ namespace Crunchy
             settings.TransparentIndex = iniFile.GetValue<int>("General", "TransparentIndex", 0);
             settings.AutoPosition = iniFile.GetValue<bool>("General", "AutoPosition", true);
 
-            if (!String.IsNullOrEmpty(sourceDirectory))
-            {
-                if (!Path.IsPathRooted(sourceDirectory))
-                {
-                    sourceDirectory = Path.GetFullPath(Path.Combine(workingPath, sourceDirectory));
-                }
-            }
-
-            if (!String.IsNullOrEmpty(destinationDirectory))
-            {
-                if (!Path.IsPathRooted(destinationDirectory))
-                {
-                    destinationDirectory = Path.GetFullPath(Path.Combine(workingPath, destinationDirectory));
-                }
-            }
-
-            if (!String.IsNullOrEmpty(outputFileName))
-            {
-                if (!Path.IsPathRooted(outputFileName))
-                {
-                    outputFileName = Path.GetFullPath(Path.Combine(workingPath, outputFileName));
-                }
-            }
+            GetFullPath(workingPath, ref sourceDirectory);
+            GetFullPath(workingPath, ref destinationDirectory);
+            GetFullPath(workingPath, ref outputFileName);
 
             if (!Directory.Exists(sourceDirectory))
             {
@@ -359,6 +354,17 @@ namespace Crunchy
             settings.OutputSize = outputSize;
 
             BatchProcessFolder(imageList, sliceList, settings);
+        }
+
+        public static void GetFullPath(string path1, ref string path2)
+        {
+            if (String.IsNullOrEmpty(path2))
+                return;
+
+            if (Path.IsPathRooted(path2))
+                return;
+
+            path2 = Path.GetFullPath(Path.Combine(path1, path2));
         }
 
         public static void BatchProcessFolder(Form parent, BatchSettings settings)
@@ -519,18 +525,26 @@ namespace Crunchy
                 image.Image = newBitmap;
             }
 
-            for (int i = 0; i < 256; i++)
+            if (settings.ColorPalette != null)
             {
-                if (colorPalette[i].A == 0)
-                    globalPalette.AddColor(colorPalette[i]);
-                else
+                for (int i = 0; i < 256; i++)
                 {
-                    Color nearestColor = null;
+                    if (colorPalette[i].A == 0)
+                        globalPalette.AddColor(colorPalette[i]);
+                    else
+                    {
+                        Color nearestColor = null;
 
-                    Palette.GetNearestColor(colorPalette[i], settings.ColorPalette, DistanceType.Sqrt, out nearestColor);
+                        Palette.GetNearestColor(colorPalette[i], settings.ColorPalette, DistanceType.Sqrt, out nearestColor);
 
-                    globalPalette.AddColor(nearestColor);
+                        globalPalette.AddColor(nearestColor);
+                    }
                 }
+            }
+            else
+            {
+                for (int i = 0; i < 256; i++)
+                    globalPalette.AddColor(colorPalette[i]);
             }
 
             if (!settings.CreateCombinedImage)

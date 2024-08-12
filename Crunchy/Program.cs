@@ -19,6 +19,13 @@ namespace Crunchy
 {
     static class Program
     {
+        [DllImport("kernel32.dll")]
+        static extern bool AttachConsole(int dwProcessId);
+        private const int ATTACH_PARENT_PROCESS = -1;
+
+        [DllImport("kernel32.dll")]
+        static extern bool FreeConsole();
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -26,6 +33,10 @@ namespace Crunchy
         static int Main(string[] args)
         {
             //args = new string[] { "C:\\Users\\headk\\Desktop\\Crunchy\\bin\\Debug\\Tyvarian2\\SpriteSheet.ini" };
+            //args = new string[] { "Graphics\\AnimatedSprites\\AnimatedSprites.ini" };
+            //args = new string[] { "Graphics\\SpritesMain.ini" };
+            //args = new string[] { "Graphics\\GameSprites\\SpriteSheet.ini" };
+            //args = new string[] { "Graphics\\GameTiles\\TileSheet.ini" };
 
             List<string> fileList = new List<string>();
             bool layout = false;
@@ -55,15 +66,15 @@ namespace Crunchy
 
             if (fileList.Count > 0)
             {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    AttachConsole(ATTACH_PARENT_PROCESS);
+                }
+
                 if (layout)
                 {
                     foreach (string file in fileList)
-                    {
-                        var task = Task.Run(async () =>
-                        {
-                            await TextureAtlas.ProcessLayoutFile(file);
-                        });
-                    }
+                        TextureAtlas.ProcessLayoutFile(file).Wait();
                 }
                 else
                 {
@@ -76,16 +87,16 @@ namespace Crunchy
 
                         TextureAtlas.ReadConfig(Path.Combine(Application.StartupPath, Settings.File.FileName));
 
-                        var task = Task.Run(async () =>
-                        {
-                            return await TextureAtlas.ProcessAtlasFiles(null);
-                        });
-
-                        (bool success, string output, string error) = task.Result;
+                        (bool success, string output, string error) = TextureAtlas.ProcessAtlasFiles(null).Result;
 
                         Console.WriteLine(output);
                         Console.Error.WriteLine(error);
                     }
+                }
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    FreeConsole();
                 }
 
                 return 1;
