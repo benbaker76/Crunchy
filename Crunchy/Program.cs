@@ -14,6 +14,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Diagnostics.Metrics;
+using Baker76.Imaging;
+using static System.Windows.Forms.Design.AxImporter;
 
 namespace Crunchy
 {
@@ -32,11 +34,11 @@ namespace Crunchy
         [STAThread]
         static int Main(string[] args)
         {
-            //args = new string[] { "C:\\Users\\headk\\Desktop\\Crunchy\\bin\\Debug\\Tyvarian2\\SpriteSheet.ini" };
-            //args = new string[] { "Graphics\\AnimatedSprites\\AnimatedSprites.ini" };
-            //args = new string[] { "Graphics\\SpritesMain.ini" };
-            //args = new string[] { "Graphics\\GameSprites\\SpriteSheet.ini" };
-            //args = new string[] { "Graphics\\GameTiles\\TileSheet.ini" };
+            //args = new string[] { "-layout", "C:\\Users\\headk\\Desktop\\Crunchy\\bin\\Debug\\Tyvarian2\\SpriteSheet.ini" };
+            //args = new string[] { "-layout", "Graphics\\AnimatedSprites\\AnimatedSprites.ini" };
+            //args = new string[] { "-layout", "Graphics\\SpritesMain.ini" };
+            //args = new string[] { "-layout", "Graphics\\GameSprites\\SpriteSheet.ini" };
+            //args = new string[] { "-layout", "Graphics\\GameTiles\\TileSheet.ini" };
 
             List<string> fileList = new List<string>();
             bool layout = false;
@@ -74,23 +76,22 @@ namespace Crunchy
                 if (layout)
                 {
                     foreach (string file in fileList)
-                        TextureAtlas.ProcessLayoutFile(file).Wait();
+                        TextureManager.ProcessLayoutFile(file).Wait();
                 }
                 else
                 {
                     for (int i = 0; i < Globals.MAX_FOLDERS; i++)
                         Settings.File.InputFolderList.Add(String.Empty);
 
+                    List<DiskFileSource> fileSources = new List<DiskFileSource>();
+
                     foreach (string file in fileList)
                     {
                         Settings.File.FileName = file;
 
-                        TextureAtlas.ReadConfig(Path.Combine(Application.StartupPath, Settings.File.FileName));
+                        TextureManager.ReadConfig(Path.Combine(Application.StartupPath, Settings.File.FileName), Settings.General);
 
-                        (bool success, string output, string error) = TextureAtlas.ProcessAtlasFiles(null).Result;
-
-                        Console.WriteLine(output);
-                        Console.Error.WriteLine(error);
+                        TextureManager.ParseAtlas(null, Settings.General, null);
                     }
                 }
 

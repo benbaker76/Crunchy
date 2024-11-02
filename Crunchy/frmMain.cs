@@ -9,6 +9,7 @@ using System.IO;
 using System.Diagnostics;
 using JeremyAnsel.ColorQuant;
 using Baker76.Imaging;
+using Hjg.Pngcs;
 
 namespace Crunchy
 {
@@ -58,12 +59,17 @@ namespace Crunchy
             DoWorkAsync(worker).Wait();
         }
 
+        private void UpdateProgress(object sender, string newLabel, int newValue)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            if (worker != null)
+                worker.ReportProgress(newValue);
+        }
+
         private async Task DoWorkAsync(BackgroundWorker worker)
         {
-            (bool success, string output, string error) = await TextureAtlas.ProcessAtlasFiles(worker);
-
-            if (!success)
-                MessageBox.Show(this, error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await TextureManager.ParseAtlas(worker, Settings.General, UpdateProgress);
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -138,13 +144,13 @@ namespace Crunchy
 
         void ReadConfig(string fileName)
         {
-            TextureAtlas.ReadConfig(fileName);
+            TextureManager.ReadConfig(fileName, Settings.General);
 
             txtOutputFolder.Text = Settings.File.OutputFolder;
             txtInputPalette.Text = Settings.File.PaletteFileName;
             chkRecursive.Checked = Settings.General.Recursive;
             txtName.Text = Settings.General.Name;
-            cboFileFormat.SelectedIndex = (int)Settings.General.FileFormat;
+            cboFileFormat.SelectedIndex = (int)Settings.File.FileFormat;
             cboBitDepth.SelectedItem = Settings.General.BitDepth.ToString();
             chkMultiTexture.Checked = Settings.General.MultiTexture;
             chkAutoSizeTexture.Checked = Settings.General.AutoSizeTexture;
@@ -174,7 +180,7 @@ namespace Crunchy
 
         void WriteConfig(string fileName)
         {
-            TextureAtlas.WriteConfig(fileName);
+            TextureManager.WriteConfig(fileName, Settings.General);
 
             toolStripStatusLabel1.Text = Path.GetFileName(Settings.File.FileName);
         }
@@ -251,7 +257,7 @@ namespace Crunchy
 
         private void cboFileFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.General.FileFormat = (FileFormat)cboFileFormat.SelectedIndex;
+            Settings.File.FileFormat = (FileFormat)cboFileFormat.SelectedIndex;
         }
 
         private void chkMultiTexture_CheckedChanged(object sender, EventArgs e)

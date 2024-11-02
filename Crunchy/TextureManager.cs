@@ -15,713 +15,709 @@ using Baker76.Imaging;
 using Color = Baker76.Imaging.Color;
 using Image = Baker76.Imaging.Image;
 using Bitmap = Baker76.Imaging.Bitmap;
+using Baker76.Core.IO;
+using JeremyAnsel.ColorQuant;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Crunchy
 {
-	public enum ImageType
-	{
-		Png,
-        Aseprite
-    };
-
-    public class ImageSizeComparer : IComparer<ImageNode>
+    public class TextureManager
     {
-        public int Compare(ImageNode x, ImageNode y)
+        private static void ExecuteBatch(string fileName, string arguments, out string output, out string error)
         {
-            int areaX = x.Width * x.Height;
-            int areaY = y.Width * y.Height;
+            int ExitCode;
+            ProcessStartInfo ProcessInfo;
+            Process process;
 
-            return -areaX.CompareTo(areaY);
-        }
-    }
+            ProcessInfo = new ProcessStartInfo(Path.GetFileName(fileName), arguments);
+            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.UseShellExecute = false;
+            ProcessInfo.WorkingDirectory = Path.GetDirectoryName(fileName);
 
-    public class PaletteLengthComparer : IComparer<ImageNode>
-    {
-        public int Compare(ImageNode x, ImageNode y)
-        {
-            return x.Image.Palette.Colors.Count.CompareTo(y.Image.Palette.Colors.Count);
-        }
-    }
+            ProcessInfo.RedirectStandardError = true;
+            ProcessInfo.RedirectStandardOutput = true;
 
-    public class ClosestPaletteSlotComparer : IComparer<ImageNode>
-    {
-        public int Compare(ImageNode x, ImageNode y)
-        {
-            return x.ClosestPaletteSlot.CompareTo(y.ClosestPaletteSlot);
-        }
-    }
+            process = Process.Start(ProcessInfo);
+            process.WaitForExit();
 
-    public class PaletteSlotCountComparer : IComparer<ImageNode>
-    {
-        public int Compare(ImageNode x, ImageNode y)
-        {
-            return x.PaletteSlotCount.CompareTo(y.PaletteSlotCount);
-        }
-    }
+            output = process.StandardOutput.ReadToEnd();
+            error = process.StandardError.ReadToEnd();
 
-    public class ImageNode : IComparer<ImageNode>
-	{
-		public int Index = -1;
-		public string FileName = String.Empty;
-		public int FrameIndex = 0;
-        public string Name = String.Empty;
-        public string Label = String.Empty;
-		public int LoopDirection = 0;
-        public int Duration = 0;
-        public int X = 0;
-		public int Y = 0;
-		public int Width = 0;
-		public int Height = 0;
-		public int FrameX = 0;
-		public int FrameY = 0;
-		public int FrameWidth = 0;
-		public int FrameHeight = 0;
-		public int PaletteSlot = -1;
-        public int ClosestPaletteSlot = -1;
-        public int PaletteSlotCount = 0;
-        public TextureNode TextureNode = null;
-		public Image Image = null;
-		public Color[] Palette = null;
-        public ImageType ImageType = ImageType.Png;
-        public bool Processed = false;
-		public bool NoFit = false;
+            ExitCode = process.ExitCode;
 
-        public Rectangle Rect { get { return new Rectangle(X, Y, Width, Height); } }
-		public RectangleF RectF { get { return new RectangleF((float)X / TextureNode.Width, (float)Y / TextureNode.Height, (float)Width / TextureNode.Width, (float)Height / TextureNode.Height); } }
-
-        public ImageNode()
-		{
-		}
-
-        public ImageNode(int index, string fileName)
-        {
-            Index = index;
-            FileName = fileName;
-
-            Size size = Baker76.Imaging.Utility.GetImageSize(fileName);
-            Width = size.Width;
-            Height = size.Height;
+            process.Close();
         }
 
-        public ImageNode(int index, string fileName, int x, int y, int paletteSlot)
-		{
-            Index = index;
-            FileName = fileName;
-			X = x;
-			Y = y;
-			PaletteSlot = paletteSlot;
-
-			Size size = Baker76.Imaging.Utility.GetImageSize(fileName);
-			Width = size.Width;
-			Height = size.Height;
-        }
-
-        public ImageNode(string name, int x, int y, int width, int height)
-		{
-			Name = name;
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
-			FrameX = 0;
-			FrameY = 0;
-			FrameWidth = width;
-			FrameHeight = height;
-		}
-
-		public ImageNode(TextureNode textureNode)
-		{
-			TextureNode = textureNode;
-			Name = textureNode.Name;
-			Width = textureNode.Width;
-			Height = textureNode.Height;
-		}
-
-        public ImageNode(int index, string name, Image image, ImageType imageType)
+        public static void ReadConfig(string fileName, CrunchOptions options)
         {
-            Index = index;
-            Name = name;
-            Width = image.Width;
-            Height = image.Height;
-            Image = image;
-            ImageType = imageType;
-        }
+            IniFile iniFile = new IniFile(fileName);
 
-        public ImageNode(TextureNode textureNode, int index, int frameIndex, string name, string label, int loopDirection, int duration, int x, int y, int width, int height, int frameX, int frameY, int frameWidth, int frameHeight)
-		{
-			TextureNode = textureNode;
-            Index = index;
-            FrameIndex = frameIndex;
-            Name = name;
-			Label = label;
-			LoopDirection = loopDirection;
-			Duration = duration;
-			X = x;
-			Y = y;
-			Width = width;
-			Height = height;
-			FrameX = frameX;
-			FrameY = frameY;
-			FrameWidth = frameWidth;
-			FrameHeight = frameHeight;
-		}
+            for (int i = 0; i < Globals.MAX_FOLDERS; i++)
+                Settings.File.InputFolderList[i] = String.Empty;
 
-        public ImageNode(int index, int frameIndex, string name, string label, int loopDirection, int duration, Image image, ImageType imageType)
-        {
-            Index = index;
-            FrameIndex = frameIndex;
-            Name = name;
-            Width = image.Width;
-            Height = image.Height;
-            Label = label;
-            LoopDirection = loopDirection;
-            Duration = duration;
-            Image = image;
-            ImageType = imageType;
-        }
-
-        public static List<ImageNode> ProcessFile(ref int index, string fileName)
-        {
-            List<ImageNode> imageList = new List<ImageNode>();
-            string name = Path.GetFileNameWithoutExtension(fileName);
-            string extension = Path.GetExtension(fileName).ToLower();
-
-            if (extension == ".ase" || extension == ".aseprite")
+            if (iniFile.ContainsKey("General", "Folder"))
             {
-                Aseprite sprite = new Aseprite(fileName);
+                Settings.File.InputFolderList[0] = iniFile.GetValue("General", "Folder", String.Empty);
 
-                for (int i = 0; i < sprite.Frames.Count; i++)
+                iniFile.RemoveKey("General", "Folder");
+            }
+            else
+            {
+                for (int i = 0; i < Globals.MAX_FOLDERS; i++)
+                    Settings.File.InputFolderList[i] = iniFile.GetValue("General", String.Format("Folder{0}", i + 1), String.Empty);
+            }
+
+            Settings.File.FileName = Path.GetFileName(iniFile.GetValue("General", "FileName", Settings.File.DefaultFileName));
+            Settings.File.OutputFolder = iniFile.GetValue("General", "OutputFolder", Settings.File.OutputFolder);
+            Settings.File.PaletteFileName = iniFile.GetValue("General", "PaletteFileName", Settings.File.PaletteFileName);
+            options.BitDepth = iniFile.GetValue<int>("General", "BitDepth", options.BitDepth);
+            options.Recursive = iniFile.GetValue<bool>("General", "Recursive", options.Recursive);
+            options.Name = iniFile.GetValue("General", "Name", options.Name);
+            Settings.File.FileFormat = iniFile.GetValue<FileFormat>("General", "FileFormat", Settings.File.FileFormat);
+            options.MultiTexture = iniFile.GetValue<bool>("General", "MultiTexture", options.MultiTexture);
+            options.AutoSizeTexture = iniFile.GetValue<bool>("General", "AutoSizeTexture", options.AutoSizeTexture);
+            options.TextureSize = iniFile.GetValue<Size>("General", "TextureSize", options.TextureSize);
+            options.MinTextureSize = iniFile.GetValue<Size>("General", "MinTextureSize", options.MinTextureSize);
+            options.MaxTextureSize = iniFile.GetValue<Size>("General", "MaxTextureSize", options.MaxTextureSize);
+            options.AlphaBackground = iniFile.GetValue<bool>("General", "AlphaBackground", options.AlphaBackground);
+            options.ColorBackground = iniFile.GetValue<bool>("General", "ColorBackground", options.ColorBackground);
+            options.IndexBackground = iniFile.GetValue<bool>("General", "IndexBackground", options.IndexBackground);
+            options.BackColor = Baker76.Imaging.Color.FromArgb(iniFile.GetValue<int>("General", "BackColor", options.BackColor.ToArgb()));
+            options.BackgroundIndex = iniFile.GetValue<int>("General", "BackgroundIndex", options.BackgroundIndex);
+            options.ReplaceBackgroundColor = iniFile.GetValue<bool>("General", "ReplaceBackgroundColor", options.ReplaceBackgroundColor);
+            options.ColorDistance = iniFile.GetValue<DistanceType>("General", "ColorDistance", options.ColorDistance);
+            options.Spacing = iniFile.GetValue<int>("General", "Spacing", options.Spacing);
+            options.FillSpacing = iniFile.GetValue<bool>("General", "FillSpacing", options.FillSpacing);
+            options.Quantize = iniFile.GetValue<bool>("General", "Quantize", options.Quantize);
+            options.ColorCount = iniFile.GetValue<int>("General", "ColorCount", options.ColorCount);
+            options.AutoPaletteSlot = iniFile.GetValue<bool>("General", "AutoPaletteSlot", options.AutoPaletteSlot);
+            options.RemapPalette = iniFile.GetValue<bool>("General", "RemapPalette", options.RemapPalette);
+            options.PaletteSlot = iniFile.GetValue<int>("General", "PaletteSlot", options.PaletteSlot);
+            options.PaletteSlotAddIndex = iniFile.GetValue<bool>("General", "PaletteSlotAddIndex", options.PaletteSlotAddIndex);
+            options.TrimBackground = iniFile.GetValue<bool>("General", "TrimBackground", options.TrimBackground);
+        }
+
+        public static void WriteConfig(string fileName, CrunchOptions options)
+        {
+            IniFile iniFile = new IniFile(fileName);
+
+            iniFile.SetValue("General", "FileName", Path.GetFileName(Settings.File.FileName));
+            iniFile.SetValue("General", "OutputFolder", Settings.File.OutputFolder);
+            iniFile.SetValue("General", "PaletteFileName", Settings.File.PaletteFileName);
+
+            for (int i = 0; i < Globals.MAX_FOLDERS; i++)
+            {
+                iniFile.SetValue("General", String.Format("Folder{0}", i + 1), Settings.File.InputFolderList[i]);
+            }
+
+            iniFile.SetValue<int>("General", "BitDepth", options.BitDepth);
+            iniFile.SetValue<bool>("General", "Recursive", options.Recursive);
+            iniFile.SetValue("General", "Name", options.Name);
+            iniFile.SetValue<FileFormat>("General", "FileFormat", Settings.File.FileFormat);
+            iniFile.SetValue<bool>("General", "MultiTexture", options.MultiTexture);
+            iniFile.SetValue<bool>("General", "AutoSizeTexture", options.AutoSizeTexture);
+            iniFile.SetValue<Size>("General", "TextureSize", options.TextureSize);
+            iniFile.SetValue<Size>("General", "MinTextureSize", options.MinTextureSize);
+            iniFile.SetValue<Size>("General", "MaxTextureSize", options.MaxTextureSize);
+            iniFile.SetValue<bool>("General", "AlphaBackground", options.AlphaBackground);
+            iniFile.SetValue<bool>("General", "ColorBackground", options.ColorBackground);
+            iniFile.SetValue<bool>("General", "IndexBackground", options.IndexBackground);
+            iniFile.SetValue<int>("General", "BackColor", options.BackColor.ToArgb());
+            iniFile.SetValue<int>("General", "BackIndex", options.BackgroundIndex);
+            iniFile.SetValue<bool>("General", "ReplaceBackgroundColor", options.ReplaceBackgroundColor);
+            iniFile.SetValue<DistanceType>("General", "ColorDistance", options.ColorDistance);
+            iniFile.SetValue<int>("General", "Spacing", options.Spacing);
+            iniFile.SetValue<bool>("General", "FillSpacing", options.FillSpacing);
+            iniFile.SetValue<bool>("General", "Quantize", options.Quantize);
+            iniFile.SetValue<int>("General", "ColorCount", options.ColorCount);
+            iniFile.SetValue<bool>("General", "AutoPaletteSlot", options.AutoPaletteSlot);
+            iniFile.SetValue<bool>("General", "RemapPalette", options.RemapPalette);
+            iniFile.SetValue<int>("Gneeral", "PaletteSlot", options.PaletteSlot);
+            iniFile.SetValue<bool>("General", "TrimBackground", options.TrimBackground);
+            iniFile.SetValue("General", "PaletteSlot", options.PaletteSlot);
+            iniFile.SetValue<bool>("General", "PaletteSlotAddIndex", options.PaletteSlotAddIndex);
+
+            iniFile.SaveToFile(fileName);
+        }
+
+        public static void GetBitmaps(List<ImageNode> imageList, BatchSettings settings, CrunchOptions options, out Color[] colorPalette)
+        {
+            colorPalette = new Color[256];
+            List<Color> colorList = new List<Color>();
+
+            for (int i = 0; i < 256; i++)
+                colorPalette[i] = Color.Empty;
+
+            for (int i = 0; i < imageList.Count; i++)
+            {
+                ImageNode image = imageList[i];
+
+                if (!File.Exists(image.FileName))
                 {
-                    Frame frame = sprite.Frames[i];
-                    var firstTagForFrame = sprite.Tags.FirstOrDefault(tag => tag.From <= i && tag.To >= i);
-                    string label = String.Empty;
-                    int loopDirection = 0;
+                    Console.WriteLine("Error: File '{0}' Not Found", image.FileName);
 
-                    if (firstTagForFrame != null)
-                    {
-                        label = firstTagForFrame.Name ?? "";
-                        loopDirection = (int)firstTagForFrame.LoopDirection;
-                    }
-
-                    imageList.Add(new ImageNode(index++, i + 1, name, label, loopDirection, frame.Duration, frame.Image, ImageType.Aseprite));
+                    continue;
                 }
-            }
-            else if (extension == ".bmp")
-            {
-                Image image = Bitmap.Read(fileName);
-               
-				imageList.Add(new ImageNode(index++, name, image, ImageType.Png));
-            }
-            else if (extension == ".png")
-            {
-                Image image = PngReader.Read(fileName);
 
-                imageList.Add(new ImageNode(index++, name, image, ImageType.Png));
-            }
+                string extension = Path.GetExtension(image.FileName).ToLower();
+                Image originalBitmap = null;
 
-            return imageList;
-        }
+                if (extension == ".png")
+                    originalBitmap = Baker76.Imaging.PngReader.Read(image.FileName);
+                else if (extension == ".bmp")
+                    originalBitmap = Bitmap.Read(image.FileName);
 
-        public static List<ImageNode> ProcessFiles(ref int index, Dictionary<string, List<string>> imageSequence)
-        {
-            List<ImageNode> imageList = new List<ImageNode>();
+                if (!settings.Quantize && (originalBitmap.BitsPerPixel != 4 && originalBitmap.BitsPerPixel != 8))
+                    continue;
 
-            foreach (var sequence in imageSequence)
-            {
-                string name = sequence.Key;
-                List<string> sequenceFiles = sequence.Value;
+                string name = Path.GetFileName(image.FileName);
+                image.Image = originalBitmap;
 
-                sequenceFiles.Sort();
-
-                int frameIndex = 1;
-
-                foreach (string fileName in sequenceFiles)
+                if (settings.Quantize)
                 {
-                    string extension = Path.GetExtension(fileName).ToLower();
-                    Image image = extension == ".png" ? PngReader.Read(fileName) : Bitmap.Read(fileName);
-
-                    imageList.Add(new ImageNode(index++, frameIndex++, name, "", 0, 100, image, ImageType.Png));
-                }
-            }
-
-            return imageList;
-        }
-
-        #region IComparer<ImageNode> Members
-
-        public int Compare(ImageNode x, ImageNode y)
-        {
-            if (x.Name != y.Name)
-                return x.Name.CompareTo(y.Name);
-
-            if (x.Label != y.Label)
-                return x.Label.CompareTo(y.Label);
-
-            return x.FrameIndex.CompareTo(y.FrameIndex);
-        }
-
-        #endregion
-    };
-
-	public class TextureNode
-	{
-		private enum XmlElement
-		{
-			None,
-			Texture,
-			Image
-		}
-
-		public string FileName = String.Empty;
-		public string Name = String.Empty;
-		public string Path = String.Empty;
-        public int Width = 0;
-        public int Height = 0;
-        public int Format = 0;
-		public bool Clamp = true;
-		public bool Linear = true;
-		public bool ColorKey = false;
-		//public Texture2D Texture = null;
-		public List<ImageNode> ImageList = null;
-		public bool UseRefCount = true;
-		public int RefCount = 0;
-
-        public TextureNode()
-        {
-            ImageList = new List<ImageNode>();
-        }
-
-        public TextureNode(int width, int height, int format)
-		{
-			Width = width;
-			Height = height; 
-			Format = format;
-            ImageList = new List<ImageNode>();
-		}
-
-		/* public TextureNode(string name, Texture2D texture)
-		{
-			Name = name;
-			Texture = texture;
-			FileName = texture.FileName;
-			TextureSize = texture.Size;
-			Clamp = texture.Clamp;
-			Linear = texture.Linear;
-			ImageList = new List<ImageNode>();
-		} */
-
-		public TextureNode(string fileName, string name, int width, int height)
-		{
-			FileName = fileName;
-			Name = name;
-            Width = width;
-            Height = height;
-            ImageList = new List<ImageNode>();
-		}
-
-		public TextureNode(string fileName, string name, bool clamp, bool linear)
-		{
-			FileName = fileName;
-			Name = name;
-			Clamp = clamp;
-			Linear = linear;
-			ImageList = new List<ImageNode>();
-		}
-
-		public TextureNode(string fileName, string name, int width, int height, bool clamp, bool linear)
-		{
-			FileName = fileName;
-			Name = name;
-            Width = width;
-            Height = height;
-            Clamp = clamp;
-			Linear = linear;
-			ImageList = new List<ImageNode>();
-		}
-
-		public static TextureNode ReadXml(string fileName)
-		{
-			XmlReader xmlReader = null;
-			XmlElement xmlElement = XmlElement.None;
-			Hashtable attribHash = new Hashtable();
-			TextureNode textureNode = null;
-
-			try
-			{
-				xmlReader = XmlReader.Create(fileName);
-
-				xmlReader.Read();
-
-				while (xmlReader.Read())
-				{
-					switch (xmlReader.NodeType)
-					{
-						case XmlNodeType.Element:
-							switch (xmlReader.LocalName.ToLower())
-							{
-								case "texture":
-									xmlElement = XmlElement.Texture;
-									textureNode = new TextureNode();
-									break;
-								case "image":
-									xmlElement = XmlElement.Image;
-									break;
-								default:
-									xmlElement = XmlElement.None;
-									break;
-							}
-
-							if (xmlReader.HasAttributes)
-							{
-								attribHash.Clear();
-								while (xmlReader.MoveToNextAttribute())
-									attribHash.Add(xmlReader.Name.ToLower(), xmlReader.Value);
-							}
-
-							switch (xmlElement)
-							{
-								case XmlElement.Texture:
-									if (textureNode != null)
-									{
-										textureNode.FileName = System.IO.Path.Combine((string)attribHash["path"], (string)attribHash["name"]);
-										textureNode.Name = (string)attribHash["name"];
-										textureNode.Path = (string)attribHash["path"];
-										textureNode.Width = StringTools.FromString<int>((string)attribHash["width"]);
-                                        textureNode.Height = StringTools.FromString<int>((string)attribHash["height"]);
-                                        textureNode.Clamp = StringTools.FromString<bool>((string)attribHash["clamp"]);
-										textureNode.Linear = StringTools.FromString<bool>((string)attribHash["linear"]);
-										textureNode.ColorKey = StringTools.FromString<bool>((string)attribHash["colorkey"]);
-									}
-									break;
-								case XmlElement.Image:
-									if (textureNode != null)
-										textureNode.ImageList.Add(new ImageNode(textureNode, StringTools.FromString<int>((string)attribHash["id"]), StringTools.FromString<int>((string)attribHash["frameindex"]), (string)attribHash["name"], (string)attribHash["label"], StringTools.FromString<int>((string)attribHash["loopdirection"]), StringTools.FromString<int>((string)attribHash["duration"]), StringTools.FromString<int>((string)attribHash["x"]), StringTools.FromString<int>((string)attribHash["y"]), StringTools.FromString<int>((string)attribHash["width"]), StringTools.FromString<int>((string)attribHash["height"]), StringTools.FromString<int>((string)attribHash["framex"]), StringTools.FromString<int>((string)attribHash["framey"]), StringTools.FromString<int>((string)attribHash["framewidth"]), StringTools.FromString<int>((string)attribHash["frameheight"])));
-									break;
-								default:
-									break;
-							}
-
-							xmlReader.MoveToElement();
-							break;
-
-						case XmlNodeType.Text:
-							string text = xmlReader.Value.Trim();
-							switch (xmlElement)
-							{
-								default:
-									break;
-							}
-							break;
-
-						case XmlNodeType.EndElement:
-							switch (xmlElement)
-							{
-								case XmlElement.Texture:
-									textureNode = null;
-									break;
-								default:
-									break;
-							}
-							break;
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				//LogFile.WriteLine("ReadTextureXml", "TextureManager", ex.Message, ex.StackTrace);
-			}
-			finally
-			{
-				if (xmlReader != null)
-				{
-					xmlReader.Close();
-					xmlReader = null;
-				}
-			}
-
-			return textureNode;
-		}
-
-		public static void WriteBin(string fileName, List<TextureNode> textureList)
-		{
-			try
-			{
-				using (FileStream fs = new FileStream(fileName, FileMode.Create))
-				{
-					using (BinaryWriter writer = new BinaryWriter(fs))
-					{
-						writer.Write(new char[] { 'c', 'r', 'c', 'h' });
-						writer.Write((ushort)0);
-						writer.Write((byte)(Settings.General.TrimBackground ? 1 : 0));
-						writer.Write((byte)0);
-						writer.Write((byte)3);
-						writer.Write((ushort)1);
-
-						foreach (TextureNode textureNode in textureList)
-						{
-							writer.Write(Encoding.ASCII.GetBytes(textureNode.Name.PadRight(16, '\0')));
-							writer.Write((ushort)textureNode.Width);
-							writer.Write((ushort)textureNode.Height);
-							writer.Write((ushort)textureNode.Format);
-							writer.Write((ushort)textureNode.ImageList.Count);
-
-							foreach (ImageNode imageNode in textureNode.ImageList)
-							{
-								writer.Write((ushort)imageNode.FrameIndex);
-								writer.Write(Encoding.ASCII.GetBytes(imageNode.Name.PadRight(16, '\0')));
-								writer.Write(Encoding.ASCII.GetBytes(imageNode.Label.PadRight(16, '\0')));
-								writer.Write((byte)imageNode.LoopDirection);
-								writer.Write((ushort)imageNode.Duration);
-								writer.Write((ushort)imageNode.X);
-								writer.Write((ushort)imageNode.Y);
-								writer.Write((ushort)imageNode.Width);
-								writer.Write((ushort)imageNode.Height);
-								if (Settings.General.TrimBackground)
-								{
-									writer.Write((ushort)imageNode.FrameX);
-									writer.Write((ushort)imageNode.FrameY);
-									writer.Write((ushort)imageNode.FrameWidth);
-									writer.Write((ushort)imageNode.FrameHeight);
-								}
-								writer.Write((byte)imageNode.PaletteSlot);
-							}
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-			}
-        }
-
-		public static void WriteTxt(string fileName, List<TextureNode> textureList)
-		{
-			List<string> textList = new List<string>();
-
-			foreach(TextureNode textureNode in textureList)
-			{
-                textList.Add(String.Format("tex n={0} w={1} h={2} n={3}", textureNode.Name, textureNode.Width, textureNode.Height, textureNode.ImageList.Count));
-
-                foreach (ImageNode imageNode in textureNode.ImageList)
-                    textList.Add(String.Format("img fi={0} n={1} l={2} ld={3} d={4} x={5} y={6} w={7} h={8} fx={9} fy={10} fw={11} fh={12} ps={13}", imageNode.FrameIndex, imageNode.Name, imageNode.Label, imageNode.LoopDirection, imageNode.Duration, imageNode.X, imageNode.Y, imageNode.Width, imageNode.Height, imageNode.FrameX, imageNode.FrameY, imageNode.FrameWidth, imageNode.FrameHeight, imageNode.PaletteSlot));
-            }
-
-			File.WriteAllLines(fileName, textList.ToArray());
-		}
-
-        public static void WriteJson(string fileName, List<TextureNode> textureList)
-        {
-            try
-            {
-                using (StreamWriter jsonWriter = new StreamWriter(fileName))
-                {
-                    jsonWriter.WriteLine("{");
-                    jsonWriter.WriteLine("\t\"trim\":true,");
-                    jsonWriter.WriteLine("\t\"rotate\":false,");
-                    jsonWriter.WriteLine("\t\"textures\":[");
-
-                    foreach (TextureNode textureNode in textureList)
+                    ColorQuantizerOptions colorQuantizerOptions = new ColorQuantizerOptions
                     {
-                        jsonWriter.WriteLine("\t\t{");
-                        jsonWriter.WriteLine($"\t\t\t\"name\":\"{textureNode.Name}\",");
-                        jsonWriter.WriteLine($"\t\t\t\"width\":{textureNode.Width},");
-                        jsonWriter.WriteLine($"\t\t\t\"height\":{textureNode.Height},");
-                        jsonWriter.WriteLine($"\t\t\t\"format\":\"{textureNode.Format}\",");
-                        jsonWriter.WriteLine("\t\t\t\"images\":[");
+                        //Palette = paletteColors,
+                        ColorCountTarget = options.ColorCount,
+                        BackgroundIndex = options.BackgroundIndex,
+                        //PaletteSlot = paletteSlot,
+                        AutoPaletteSlot = options.AutoPaletteSlot,
+                        PaletteSlotAddIndex = options.PaletteSlotAddIndex,
+                        DistanceType = options.ColorDistance
+                    };
 
-                        foreach (ImageNode imageNode in textureNode.ImageList)
+                    WuAlphaColorQuantizer quantizer = new WuAlphaColorQuantizer();
+                    ColorQuantizerResult result = quantizer.Quantize(originalBitmap.PixelData, colorQuantizerOptions);
+                    colorPalette = result.ColorPalette;
+
+                    image.Image = new Image(originalBitmap.Width, originalBitmap.Height, 8, new Palette(result.ColorPalette), result.Bytes);
+                }
+
+                image.Image.Palette.SetNearestColorPalette(settings.ColorPalette, DistanceType.Sqrt);
+
+                image.Palette = image.Image.GetUsedColors();
+
+                colorList.AddRange(image.Palette);
+
+                for (int j = 0; j < 16 - image.Palette.Length; j++)
+                    colorList.Add(Color.Empty);
+            }
+
+            for (int i = 0; i < imageList.Count; i++)
+            {
+                ImageNode image = imageList[i];
+                List<Color> colorPaletteTemp = new List<Color>(colorList);
+                Palette imagePalette = new Palette(image.Palette);
+
+                for (int j = 0; j < 16; j++)
+                    colorPaletteTemp[i * 16 + j] = Color.Empty;
+
+                image.ClosestPaletteSlot = imagePalette.GetBestPaletteSlot(colorPaletteTemp.ToArray(), DistanceType.Sqrt);
+
+                imageList[image.ClosestPaletteSlot].PaletteSlotCount++;
+
+                //Color[] nearestColorPalette = new Color[16];
+                //Array.Copy(colorPaletteTemp.ToArray(), image.ClosestPaletteSlot * 16, nearestColorPalette, 0, 16);
+
+                //SetBitmapNearestColorPaletteIndices(image.PngImage, nearestColorPalette, DistanceType.Sqrt);
+            }
+
+            //imageList.Sort(new ClosestPaletteSlotComparer());
+            //imageList.Reverse()
+
+            imageList.Sort(new PaletteSlotCountComparer());
+            imageList.Reverse();
+
+            /* for (int i = 0; i < imageList.Count; i++)
+            {
+                ImageNode image = imageList[i];
+
+                Console.WriteLine("{0}: {1} -> {2}", i, image.ClosestPaletteSlot, image.PaletteSlotCount);
+            } */
+
+            imageList.Sort(new PaletteLengthComparer());
+            imageList.Reverse();
+        }
+
+        public static async Task ProcessLayoutFile(string fileName)
+        {
+            string appPath = System.Windows.Forms.Application.StartupPath;
+            string workingPath = Path.GetDirectoryName(fileName);
+            List<ImageNode> imageList = new List<ImageNode>();
+            List<SliceNode> sliceList = new List<SliceNode>();
+            IniFile iniFile = new IniFile(fileName);
+            BatchSettings settings = new BatchSettings();
+
+            string sourceDirectory = iniFile.GetValue("General", "SourceDirectory");
+            string destinationDirectory = iniFile.GetValue("General", "DestinationDirectory");
+            string outputFileName = iniFile.GetValue("General", "OutputFileName");
+            Size outputSize = iniFile.GetValue<Size>("General", "OutputSize");
+            string paletteFileName = iniFile.GetValue("General", "PaletteFileName");
+
+            if (!String.IsNullOrEmpty(paletteFileName))
+            {
+                GetFullPath(workingPath, ref paletteFileName);
+
+                if (!File.Exists(paletteFileName))
+                {
+                    paletteFileName = iniFile.GetValue("General", "PaletteFileName");
+                    GetFullPath(appPath, ref paletteFileName);
+                }
+
+                settings.ColorPalette = await PalFile.Read(paletteFileName);
+            }
+
+            settings.SwapMagentaWithTransparentIndex = iniFile.GetValue<bool>("General", "SwapMagentaWithTransparentIndex", true);
+            settings.SortSizes = iniFile.GetValue<bool>("General", "SortSizes", true);
+            settings.SortColors = iniFile.GetValue<bool>("General", "SortColors", true);
+            settings.Quantize = iniFile.GetValue<bool>("General", "Quantize", true);
+            settings.AddPaletteOffset = iniFile.GetValue<bool>("General", "AddPaletteOffset", false);
+            settings.CreateCombinedImage = iniFile.GetValue<bool>("General", "CreateCombinedImage", true);
+            settings.MaxPaletteCount = iniFile.GetValue<int>("General", "MaxPaletteCount", 16);
+            settings.TransparentIndex = iniFile.GetValue<int>("General", "TransparentIndex", 0);
+            settings.AutoPosition = iniFile.GetValue<bool>("General", "AutoPosition", true);
+
+            GetFullPath(workingPath, ref sourceDirectory);
+            GetFullPath(workingPath, ref destinationDirectory);
+            GetFullPath(workingPath, ref outputFileName);
+
+            if (!Directory.Exists(sourceDirectory))
+            {
+                Console.WriteLine("Error: Source Directory '{0}' Doesn't Exist", sourceDirectory);
+
+                return;
+            }
+
+            for (int i = 0; i < 256; i++)
+            {
+                string sectionName = String.Format("Image{0}", i);
+                string name = iniFile.GetValue(sectionName, "Name");
+
+                if (name == null)
+                    break;
+
+                Point position = iniFile.GetValue<Point>(sectionName, "Position", Point.Empty);
+                int paletteSlot = iniFile.GetValue<int>(sectionName, "PaletteSlot", -1);
+                string path = Path.Combine(sourceDirectory, name);
+
+                imageList.Add(new ImageNode(i, path, position.X, position.Y, paletteSlot));
+            }
+
+            for (int i = 0; i < 256; i++)
+            {
+                string sectionName = String.Format("Slice{0}", i);
+                string name = iniFile.GetValue(sectionName, "Name");
+
+                if (name == null)
+                    break;
+
+                Point position = iniFile.GetValue<Point>(sectionName, "Position", Point.Empty);
+                Size size = iniFile.GetValue<Size>(sectionName, "Size", Size.Empty);
+                string path = Path.Combine(destinationDirectory, name);
+
+                sliceList.Add(new SliceNode(path, position, size));
+            }
+
+            settings.SourceDirectory = sourceDirectory;
+            settings.DestinationDirectory = destinationDirectory;
+            settings.OutputFileName = outputFileName;
+            settings.OutputSize = outputSize;
+
+            BatchProcessFolder(imageList, sliceList, settings);
+        }
+
+        public static void GetFullPath(string path1, ref string path2)
+        {
+            if (String.IsNullOrEmpty(path2))
+                return;
+
+            if (Path.IsPathRooted(path2))
+                return;
+
+            path2 = Path.GetFullPath(Path.Combine(path1, path2));
+        }
+
+        public static void BatchProcessFolder(Form parent, BatchSettings settings)
+        {
+            if (!Directory.Exists(settings.SourceDirectory))
+            {
+                Console.WriteLine("Error: Source Directory '{0}' Doesn't Exist", settings.SourceDirectory);
+
+                return;
+            }
+
+            string[] fileArray = Directory.GetFiles(settings.SourceDirectory, "*.*");
+            List<ImageNode> imageList = new List<ImageNode>();
+            RectanglePacker rectanglePacker = new RectanglePacker(settings.OutputSize.Width, settings.OutputSize.Height);
+
+            if (fileArray.Length == 0)
+            {
+                Console.WriteLine("Error: No Files Found in '{0}'", settings.SourceDirectory);
+
+                return;
+            }
+
+            for (int i = 0; i < fileArray.Length; i++)
+                imageList.Add(new ImageNode(i, fileArray[i]));
+
+            imageList.Sort(new ImageNode());
+
+            if (settings.SortSizes)
+            {
+                imageList.Sort(new ImageSizeComparer());
+            }
+
+            for (int i = 0; i < imageList.Count; i++)
+            {
+                ImageNode image = imageList[i];
+                Rectangle srcRectangle = new Rectangle(0, 0, image.Width, image.Height);
+                Point position = Point.Empty;
+
+                if (rectanglePacker.FindPoint(srcRectangle.Size, ref position))
+                {
+                    image.X = position.X;
+                    image.Y = position.Y;
+                }
+
+                image.PaletteSlot = i;
+            }
+
+            string outputFileName = null;
+
+            if (!FileIO.TrySaveFile(parent, null, null, "Bitmap Files", new string[] { ".bmp", ".png" }, out outputFileName))
+            {
+                Console.WriteLine("Error: Saving File '{0}'", outputFileName);
+            }
+
+            settings.OutputFileName = outputFileName;
+
+            BatchProcessFolder(imageList, new List<SliceNode>(), settings);
+        }
+
+        public static void BatchProcessFolder(List<ImageNode> imageList, List<SliceNode> sliceList, BatchSettings settings)
+        {
+            if (!Directory.Exists(settings.SourceDirectory))
+            {
+                Console.WriteLine("Error: Source Directory '{0}' Doesn't Exist", settings.SourceDirectory);
+
+                return;
+            }
+
+            Color[] colorPalette = null;
+            bool[] paletteUsed = new bool[16];
+            int paletteCount = 0;
+            Palette globalPalette = new Palette(256);
+
+            GetBitmaps(imageList, settings, Settings.General, out colorPalette);
+
+            for (int i = 0; i < imageList.Count; i++)
+            {
+                ImageNode image = imageList[i];
+
+                if (image.Image == null)
+                    continue;
+
+                string name = Path.GetFileName(image.FileName);
+                int paletteSlot = (image.PaletteSlot == -2 ? paletteCount++ : image.PaletteSlot);
+                int paletteOffset = paletteSlot * 16;
+                Palette palette = image.Image.Palette;
+                int totalColors = palette.Colors.Count;
+
+                if (paletteCount > settings.MaxPaletteCount || paletteSlot > 15)
+                {
+                    paletteSlot = image.Image.Palette.GetBestPaletteSlot(colorPalette, DistanceType.Sqrt);
+                    paletteOffset = paletteSlot * 16;
+                }
+
+                Console.WriteLine("Processing '{0}' palette index {1} ({2} used of {3} colors)", name, paletteSlot, image.Palette.Length, totalColors);
+
+                if (paletteSlot != -1 && paletteUsed[paletteSlot])
+                {
+                    Color[] nearestColorPalette = new Color[16];
+                    Array.Copy(colorPalette, paletteOffset, nearestColorPalette, 0, 16);
+
+                    Console.WriteLine("'{0}' Reusing PaletteSlot {1}", image.FileName, paletteSlot);
+
+                    image.Image.RemapColors(nearestColorPalette, settings.TransparentIndex, DistanceType.Sqrt);
+                    palette = image.Image.Palette;
+                }
+                else
+                {
+                    int transparentIndex = -1;
+
+                    if (settings.SwapMagentaWithTransparentIndex)
+                    {
+                        for (int j = 0; j < palette.Colors.Count; j++)
                         {
-                            jsonWriter.WriteLine("\t\t\t\t{");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"fi\":{imageNode.FrameIndex},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"n\":\"{imageNode.Name}\",");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"l\":\"{imageNode.Label}\",");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"ld\":{imageNode.LoopDirection},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"d\":{imageNode.Duration},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"x\":{imageNode.X},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"y\":{imageNode.Y},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"w\":{imageNode.Width},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"h\":{imageNode.Height},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"fx\":{imageNode.FrameX},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"fy\":{imageNode.FrameY},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"fw\":{imageNode.FrameWidth},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"fh\":{imageNode.FrameHeight},");
-                            jsonWriter.WriteLine($"\t\t\t\t\t\"ps\":{imageNode.PaletteSlot}");
-                            jsonWriter.WriteLine("\t\t\t\t},");
+                            if (palette.Colors[j].R == Color.Magenta.R &&
+                                palette.Colors[j].G == Color.Magenta.G &&
+                                palette.Colors[j].B == Color.Magenta.B)
+                            {
+                                transparentIndex = j;
+                                break;
+                            }
                         }
 
-                        jsonWriter.WriteLine("\t\t\t]");
-                        jsonWriter.Write("\t\t}");
-                        if (textureNode != textureList.Last())
+                        if (transparentIndex != -1)
                         {
-                            jsonWriter.Write(",");
+                            image.Image.SwapColors(settings.TransparentIndex, transparentIndex);
+                            palette = image.Image.Palette;
                         }
-                        jsonWriter.WriteLine();
                     }
 
-                    jsonWriter.WriteLine("\t]");
-                    jsonWriter.WriteLine("}");
+                    if (settings.SortColors)
+                    {
+                        image.Image.SortPalette(SortColorMode.Sqrt, HSBSortMode.HSB, settings.TransparentIndex);
+                        palette = image.Image.Palette;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                // Handle exception
-            }
-        }
 
-        public static void WriteXml(string fileName, List<TextureNode> textureList)
-        {
-            try
-            {
-                using (StreamWriter xml = new StreamWriter(fileName))
+                Image newBitmap = new Image(image.Image.Width, image.Image.Height, 8, image.Image.Palette, image.Image.PixelData);
+
+                if (paletteSlot != -1)
                 {
-                    xml.WriteLine("<atlas>");
-                    xml.WriteLine("\t<trim>true</trim>");
-                    xml.WriteLine("\t<rotate>false</rotate>");
+                    if (settings.AddPaletteOffset)
+                    {
+                        newBitmap.AddIndexOffset(paletteOffset);
+                    }
 
-					foreach (TextureNode textureNode in textureList)
-					{
-						xml.WriteLine("\t<tex n=\"" + textureNode.Name + "\" w=\"" + textureNode.Width + " h=\"" + textureNode.Height + "\" format=\"" + textureNode.Format + "\">");
+                    if (!paletteUsed[paletteSlot])
+                    {
+                        for (int j = 0; j < palette.Colors.Count && j < 16; j++)
+                        {
+                            colorPalette[paletteOffset + j] = palette.Colors[j];
+                        }
 
-						foreach (ImageNode imageNode in textureNode.ImageList)
-							xml.WriteLine("\t\t<img fi=\"" + imageNode.FrameIndex + "\" n=\"" + imageNode.Name + "\" l=\"" + imageNode.Label + "\" ld=\"" + imageNode.LoopDirection + "\" d=\"" + imageNode.Duration + "\" x=\"" + imageNode.X + "\" y=\"" + imageNode.Y + "\" w=\"" + imageNode.Width + "\" h=\"" + imageNode.Height + "\" fx=\"" + imageNode.FrameX + "\" fy=\"" + imageNode.FrameY + "\" fw=\"" + imageNode.FrameWidth + "\" fh=\"" + imageNode.FrameHeight + "\" ps=\"" + imageNode.PaletteSlot + "\" />");
+                        paletteUsed[paletteSlot] = true;
+                    }
+                }
 
-						xml.WriteLine("\t</tex>");
-					}
+                image.Image = newBitmap;
+            }
 
-                    xml.WriteLine("</atlas>");
+            if (settings.ColorPalette != null)
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    if (colorPalette[i].A == 0)
+                        globalPalette.AddColor(colorPalette[i]);
+                    else
+                    {
+                        Color nearestColor = null;
+
+                        Palette.GetNearestColor(colorPalette[i], settings.ColorPalette, DistanceType.Sqrt, out nearestColor);
+
+                        globalPalette.AddColor(nearestColor);
+                    }
                 }
             }
-            catch (Exception ex)
+            else
             {
-                // Handle exception
+                for (int i = 0; i < 256; i++)
+                    globalPalette.AddColor(colorPalette[i]);
+            }
+
+            if (!settings.CreateCombinedImage)
+            {
+                if (Directory.Exists(settings.DestinationDirectory))
+                {
+                    for (int i = 0; i < imageList.Count; i++)
+                    {
+                        ImageNode image = imageList[i];
+                        Image bitmap = image.Image;
+                        string fileName = Path.GetFileName(image.FileName);
+                        string destinationFileName = Path.Combine(settings.DestinationDirectory, fileName);
+
+                        bitmap.Palette = globalPalette;
+                        bitmap.Save(destinationFileName);
+                    }
+                }
+            }
+
+            Rectangle outputRectangle = new Rectangle(Point.Empty, settings.OutputSize);
+            Image outputBitmap = new Image(settings.OutputSize.Width, settings.OutputSize.Height, 8, globalPalette);
+
+            outputBitmap.Clear(settings.TransparentIndex);
+
+            for (int i = 0; i < imageList.Count; i++)
+            {
+                ImageNode image = imageList[i];
+                Image bitmap = image.Image;
+                Rectangle srcRectangle = new Rectangle(Point.Empty, bitmap.Size);
+                Rectangle dstRectangle = new Rectangle(image.X, image.Y, bitmap.Width, bitmap.Height);
+
+                if (settings.AutoPosition)
+                {
+                    int dstWidth = bitmap.Width, imageCount = 1;
+
+                    dstRectangle.Intersect(outputRectangle);
+                    dstWidth -= dstRectangle.Width;
+
+                    outputBitmap.DrawImage(bitmap, dstRectangle, srcRectangle);
+
+                    while (dstWidth > 0)
+                    {
+                        srcRectangle = new Rectangle(bitmap.Width - dstWidth, 0, dstWidth, bitmap.Height);
+                        dstRectangle = new Rectangle(0, image.Y + bitmap.Height * imageCount, dstWidth, bitmap.Height);
+
+                        dstRectangle.Intersect(outputRectangle);
+                        dstWidth -= dstRectangle.Width;
+
+                        outputBitmap.DrawImage(bitmap, dstRectangle, srcRectangle);
+
+                        imageCount++;
+                    }
+                }
+                else
+                {
+                    outputBitmap.DrawImage(bitmap, dstRectangle, srcRectangle);
+                }
+
+                image.Image = null;
+
+                if (settings.CreateCombinedImage)
+                {
+                    if (File.Exists(settings.OutputFileName))
+                        File.Delete(settings.OutputFileName);
+
+                    string extension = Path.GetExtension(settings.OutputFileName);
+
+                    if (extension == ".png")
+                        outputBitmap.Save(settings.OutputFileName);
+                    else
+                        Bitmap.Write(settings.OutputFileName, outputBitmap);
+                }
+
+                foreach (SliceNode slice in sliceList)
+                {
+                    Image sliceBitmap = new Image(slice.Size.Width, slice.Size.Height, 8, globalPalette);
+
+                    sliceBitmap.DrawImage(outputBitmap, new Rectangle(Point.Empty, slice.Size), new Rectangle(slice.Position, slice.Size));
+
+                    string extension = Path.GetExtension(slice.FileName);
+
+                    if (extension == ".png")
+                        sliceBitmap.Save(slice.FileName);
+                    else
+                        Bitmap.Write(slice.FileName, outputBitmap);
+                }
             }
         }
 
-        private static long UnixTimeNow()
-		{
-			var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-			return (long)timeSpan.TotalSeconds;
-		}
+        public static Image CreateTextureImage(Size textureSize, Palette palette, CrunchOptions options)
+        {
+            bool isIndexed = options.BitDepth <= 8;
+            Image textureImage = new Image(textureSize.Width, textureSize.Height, System.Math.Max(options.BitDepth, 8), isIndexed ? palette : new Palette());
 
-		public static void WriteMeta(List<TextureNode> textureList)
-		{
+            if (options.ColorBackground)
+                textureImage.Clear(options.BackColor);
 
-			foreach (TextureNode textureNode in textureList)
-			{
-				List<string> textList = new List<string>();
+            if (isIndexed && options.IndexBackground)
+            {
+                palette.TransparentColor = options.BackgroundIndex;
+                textureImage.Clear(options.BackgroundIndex);
+            }
 
-				textList.Add("fileFormatVersion: 2");
-				textList.Add(String.Format("guid: {0}", Guid.NewGuid().ToString("N")));
-				textList.Add(String.Format("timeCreated: {0}", UnixTimeNow()));
-				textList.Add("licenseType: Pro");
-				textList.Add("TextureImporter:");
-				textList.Add("  fileIDToRecycleName:");
+            return textureImage;
+        }
 
-				int fileID = 21300000;
+        public static async Task ParseAtlas(object sender, CrunchOptions options, Action<object, string, int> progressCallback)
+        {
+            string[] patterns = new string[] { "*.png", "*.bmp", "*.ase", "*.aseprite" };
+            Settings.General.Name = String.IsNullOrEmpty(Settings.General.Name) ? "texture" : Settings.General.Name;
+            Settings.General.TextureFormat = (int)Dave2D.BitsToD2Format(Settings.General.BitDepth);
 
-				foreach (ImageNode imageNode in textureNode.ImageList)
-				{
-					textList.Add(String.Format("    {0}: {1}", fileID, imageNode.Name));
+            string fullPath = Path.Combine(Settings.File.OutputFolder, Settings.General.Name);
+            List<FileInfo> fileList = new List<FileInfo>();
 
-					fileID += 2;
-				}
+            for (int i = 0; i < Globals.MAX_FOLDERS; i++)
+            {
+                if (String.IsNullOrEmpty(Settings.File.InputFolderList[i]))
+                    continue;
 
-				textList.Add("  serializedVersion: 4");
-				textList.Add("  mipmaps:");
-				textList.Add("    mipMapMode: 0");
-				textList.Add("    enableMipMap: 0");
-				textList.Add("    sRGBTexture: 1");
-				textList.Add("    linearTexture: 0");
-				textList.Add("    fadeOut: 0");
-				textList.Add("    borderMipMap: 0");
-				textList.Add("    mipMapFadeDistanceStart: 1");
-				textList.Add("    mipMapFadeDistanceEnd: 3");
-				textList.Add("  bumpmap:");
-				textList.Add("    convertToNormalMap: 0");
-				textList.Add("    externalNormalMap: 0");
-				textList.Add("    heightScale: 0.25");
-				textList.Add("    normalMapFilter: 0");
-				textList.Add("  isReadable: 0");
-				textList.Add("  grayScaleToAlpha: 0");
-				textList.Add("  generateCubemap: 6");
-				textList.Add("  cubemapConvolution: 0");
-				textList.Add("  seamlessCubemap: 0");
-				textList.Add("  textureFormat: -3");
-				textList.Add("  maxTextureSize: 2048");
-				textList.Add("  textureSettings:");
-				textList.Add("    filterMode: -1");
-				textList.Add("    aniso: 16");
-				textList.Add("    mipBias: -1");
-				textList.Add("    wrapMode: 1");
-				textList.Add("  nPOTScale: 0");
-				textList.Add("  lightmap: 0");
-				textList.Add("  compressionQuality: 50");
-				textList.Add("  spriteMode: 2");
-				textList.Add("  spriteExtrude: 1");
-				textList.Add("  spriteMeshType: 0");
-				textList.Add("  alignment: 0");
-				textList.Add("  spritePivot: {x: 0.5, y: 0.5}");
-				textList.Add("  spriteBorder: {x: 0, y: 0, z: 0, w: 0}");
-				textList.Add("  spritePixelsToUnits: 1");
-				textList.Add("  alphaUsage: 1");
-				textList.Add("  alphaIsTransparency: 1");
-				textList.Add("  spriteTessellationDetail: -1");
-				textList.Add("  textureType: 8");
-				textList.Add("  textureShape: 1");
-				textList.Add("  maxTextureSizeSet: 0");
-				textList.Add("  compressionQualitySet: 0");
-				textList.Add("  textureFormatSet: 0");
-				textList.Add("  platformSettings:");
-				textList.Add("  - buildTarget: DefaultTexturePlatform");
-				textList.Add("    maxTextureSize: 2048");
-				textList.Add("    textureFormat: -1");
-				textList.Add("    textureCompression: 0");
-				textList.Add("    compressionQuality: 50");
-				textList.Add("    crunchedCompression: 0");
-				textList.Add("    allowsAlphaSplitting: 0");
-				textList.Add("    overridden: 0");
-				textList.Add("  - buildTarget: Standalone");
-				textList.Add("    maxTextureSize: 2048");
-				textList.Add("    textureFormat: -1");
-				textList.Add("    textureCompression: 0");
-				textList.Add("    compressionQuality: 50");
-				textList.Add("    crunchedCompression: 0");
-				textList.Add("    allowsAlphaSplitting: 0");
-				textList.Add("    overridden: 0");
-				textList.Add("  spriteSheet:");
-				textList.Add("    serializedVersion: 2");
-				textList.Add("    sprites:");
+                if (!Directory.Exists(Settings.File.InputFolderList[i]))
+                    continue;
 
-				foreach (ImageNode imageNode in textureNode.ImageList)
-				{
-					textList.Add("    - serializedVersion: 2");
-					textList.Add(String.Format("      name: {0}", imageNode.Name));
-					textList.Add("      rect:");
-					textList.Add("        serializedVersion: 2");
-					textList.Add(String.Format("        x: {0}", imageNode.X));
-					textList.Add(String.Format("        y: {0}", textureNode.Height - imageNode.Y - imageNode.Height));
-					textList.Add(String.Format("        width: {0}", imageNode.Width));
-					textList.Add(String.Format("        height: {0}", imageNode.Height));
-					textList.Add("      alignment: 0");
-					textList.Add("      pivot: {x: 0.5, y: 0.5}");
-					textList.Add("      border: {x: 0, y: 0, z: 0, w: 0}");
-					textList.Add("      outline: []");
-					textList.Add("      tessellationDetail: -1");
-				}
+                foreach (string pattern in patterns)
+                    fileList.AddRange(FileIO.GetFileList(Settings.File.InputFolderList[i], pattern, Settings.General.Recursive));
+            }
 
-				textList.Add("    outline: []");
-				textList.Add("  spritePackingTag: ");
-				textList.Add("  userData: ");
-				textList.Add("  assetBundleName: ");
-				textList.Add("  assetBundleVariant: ");
+            Baker76.Imaging.Color[] paletteColors = await PalFile.Read(Settings.File.PaletteFileName);
+            Palette palette = new Palette(paletteColors);
 
-				File.WriteAllLines(textureNode.Path + ".meta", textList.ToArray());
-			}
-		}
+            IList<IFileSource> fileSources = new List<IFileSource>();
 
-		public int ImageCount
-		{
-			get { return ImageList.Count; }
-		}
-	}
+            foreach (var file in fileList)
+                fileSources.Add(new DiskFileSource(file.FullName));
+
+            List<(TextureNode, Baker76.Imaging.Image)> textures = await Crunch.ParseAtlas(sender, fileSources, palette, Settings.General, progressCallback);
+            List<TextureNode> textureList = new List<TextureNode>();
+
+            for (int i = 0; i < textures.Count; i++)
+            {
+                (TextureNode textureNode, Baker76.Imaging.Image textureImage) = textures[i];
+
+                string fileName = textureNode.Name + ".png";
+                string path = Path.Combine(Settings.File.OutputFolder, fileName);
+
+                Baker76.Imaging.PngWriter.Write(path, textureImage);
+                //Bmp.TryWrite(Path.ChangeExtension(textureNode.Path, "bmp"), textureImage);
+
+                textureList.Add(textureNode);
+            }
+
+            switch (Settings.File.FileFormat)
+            {
+                case FileFormat.Bin:
+                    Crunch.WriteBin(fullPath + ".crch", textureList, Settings.General.TrimBackground);
+                    break;
+                case FileFormat.Text:
+                    TextureNode.WriteTxt(fullPath + ".txt", textureList);
+                    break;
+                case FileFormat.Json:
+                    TextureNode.WriteJson(fullPath + ".json", textureList);
+                    break;
+                case FileFormat.Xml:
+                    TextureNode.WriteXml(fullPath + ".xml", textureList);
+                    break;
+                case FileFormat.Meta:
+                    TextureNode.WriteMeta(textureList);
+                    break;
+            }
+        }
+
+        public class BatchSettings
+        {
+            public string SourceDirectory;
+            public string DestinationDirectory;
+            public string OutputFileName;
+            public Size OutputSize;
+            public string PaletteFileName;
+            public Color[] ColorPalette;
+            public int TransparentIndex;
+            public bool SwapMagentaWithTransparentIndex;
+            public bool SortSizes;
+            public bool SortColors;
+            public bool Quantize;
+            public bool AddPaletteOffset;
+            public bool CreateCombinedImage;
+            public bool AutoPosition;
+            public int MaxPaletteCount;
+        }
+
+        public class SliceNode
+        {
+            public string FileName = null;
+            public Point Position = Point.Empty;
+            public Size Size = Size.Empty;
+
+            public SliceNode(string fileName, Point position, Size size)
+            {
+                FileName = fileName;
+                Position = position;
+                Size = size;
+            }
+        }
+    }
 }
