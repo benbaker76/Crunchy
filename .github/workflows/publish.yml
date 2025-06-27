@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 permissions:
-  contents: write
+  contents: write      # to create the GitHub Release
   packages: read
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       ARTIFACT_ROOT: publish
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup .NET
@@ -32,13 +32,16 @@ jobs:
 
       - name: Publish Executable & Dependencies
         run: |
+          # make sure the folder exists
           mkdir -p ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }}
+          # publish into that folder
           dotnet publish ${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj \
             --configuration Release \
-            --output ${{ env.ARTIFACT_ROOT }}}}/${{ env.APP_NAME }}
+            --output ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }}
 
       - name: Copy data files
         run: |
+          # copy ONLY the contents of Data/ into publish/Crunchy/
           cp -R ./Data/. ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }}/
 
       - name: Zip artifacts
@@ -46,8 +49,11 @@ jobs:
         run: |
           VERSION=${{ steps.get-version.outputs.version }}
           ZIP="${{ env.APP_NAME }}-${VERSION}.zip"
+          # move into the root of our artifacts
           cd ${{ env.ARTIFACT_ROOT }}
+          # zip the entire Crunchy/ folder
           zip -r "../${ZIP}" "${{ env.APP_NAME }}"
+          # expose the ZIP name for the next step
           echo "ZIP=${ZIP}" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
