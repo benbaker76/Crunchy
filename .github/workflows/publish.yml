@@ -25,11 +25,11 @@ jobs:
         id: get-version
         uses: kzrnm/get-net-sdk-project-versions-action@v2
         with:
-          proj-path: 'YourProject/YourProject.csproj'
+          proj-path: 'Crunchy/Crunchy.csproj'
 
       - name: Publish Executable & Dependencies
         run: |
-          dotnet publish YourProject/YourProject.csproj \
+          dotnet publish Crunchy/Crunchy.csproj \
             --configuration Release \
             --output ./publish
 
