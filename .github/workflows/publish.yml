@@ -1,0 +1,53 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write      # needed to create GitHub Release
+  packages: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: Get project version
+        id: get-version
+        uses: kzrnm/get-net-sdk-project-versions-action@v2
+        with:
+          proj-path: 'YourProject/YourProject.csproj'
+
+      - name: Publish Executable & Dependencies
+        run: |
+          dotnet publish YourProject/YourProject.csproj \
+            --configuration Release \
+            --output ./publish
+
+      - name: Copy data files
+        run: |
+          cp -R ./SpecialDataFolder ./publish/
+
+      - name: Zip artifacts
+        run: |
+          ZIP=release-${{ steps.get-version.outputs.version }}.zip
+          cd publish
+          zip -r "../${ZIP}" .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get-version.outputs.version }}
+          name: Release ${{ steps.get-version.outputs.version }}
+          files: release-${{ steps.get-version.outputs.version }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
