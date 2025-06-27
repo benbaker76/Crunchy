@@ -35,7 +35,7 @@ jobs:
 
       - name: Copy data files
         run: |
-          cp -R ./SpecialDataFolder ./publish/
+          cp -R ./Data ./publish/
 
       - name: Zip artifacts
         run: |
