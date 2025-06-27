@@ -5,12 +5,12 @@ on:
     branches: [ main ]
 
 permissions:
-  contents: write      # to create the GitHub Release
+  contents: write
   packages: read
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       APP_NAME: Crunchy
       ARTIFACT_ROOT: publish
@@ -30,31 +30,26 @@ jobs:
         with:
           proj-path: '${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj'
 
-      - name: Publish Executable & Dependencies
+      - name: Publish EXE + only your DLLs
         run: |
           mkdir -p ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }}
           dotnet publish ${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj \
             --configuration Release \
             --output ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }} \
-            --runtime win-x64 \
-            --self-contained true \
-            /p:EnableWindowsTargeting=true
+            /p:EnableWindowsTargeting=true \
+            /p:SelfContained=false
 
       - name: Copy data files
         run: |
-          # copy ONLY the contents of Data/ into publish/Crunchy/
-          cp -R ./Data/. ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }}/
+          xcopy Data %ARTIFACT_ROOT%\%APP_NAME% /E /I
 
       - name: Zip artifacts
         id: zip
         run: |
           VERSION=${{ steps.get-version.outputs.version }}
           ZIP="${{ env.APP_NAME }}-${VERSION}.zip"
-          # move into the root of our artifacts
           cd ${{ env.ARTIFACT_ROOT }}
-          # zip the entire Crunchy/ folder
           zip -r "../${ZIP}" "${{ env.APP_NAME }}"
-          # expose the ZIP name for the next step
           echo "ZIP=${ZIP}" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
