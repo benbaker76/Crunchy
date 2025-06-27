@@ -374,7 +374,18 @@ namespace Crunchy
 
         private void lblbaker76_Click(object sender, EventArgs e)
         {
-            Process.Start("https://baker76.com");
+            try
+            {
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "https://baker76.com",
+                    UseShellExecute = true
+                };
+                Process.Start(processStartInfo);
+            }
+            catch
+            {
+            }
         }
     }
 }
