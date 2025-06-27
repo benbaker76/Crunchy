@@ -15,7 +15,7 @@ using System.Windows.Forms;
 using static Baker76.Imaging.Aseprite;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using JeremyAnsel.ColorQuant;
+using Baker76.ColorQuant;
 using Color = Baker76.Imaging.Color;
 using Image = Baker76.Imaging.Image;
 using Bitmap = Baker76.Imaging.Bitmap;

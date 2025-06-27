@@ -1,5 +1,6 @@
 ﻿using System;
 using Baker76.Imaging;
+using Baker76.Imaging.Pngcs;
 using Image = Baker76.Imaging.Image;
 
 namespace Crunchy

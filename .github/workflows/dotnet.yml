@@ -1,0 +1,59 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ main ]
+    # or push tags: ['v*.*.*'] if you prefer releasing only on version tags
+
+permissions:
+  contents: write  # for creating the GitHub release
+  packages: read
+
+jobs:
+  release:
+    runs-on: windows-latest    # or ubuntu-latest if you prefer
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v3
+
+      - name: 🔧 Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: 📝 Extract version from csproj
+        id: get_version
+        shell: bash
+        run: |
+          # adjust path if your .csproj lives elsewhere
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./MyProject/MyProject.csproj)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: 📦 Publish Executable
+        run: |
+          dotnet publish ./MyProject.sln \
+            --configuration Release \
+            --output ./publish \
+            # if you need a self-contained single exe uncomment:
+            # --runtime win-x64 --self-contained true /p:PublishSingleFile=true
+
+      - name: 📂 Copy data files
+        run: |
+          # copy your special folder (adjust path as needed)
+          cp -r ./Data ./publish/Data
+
+      - name: 📇 Zip artifacts
+        run: |
+          ZIP=release-${{ steps.get_version.outputs.VERSION }}.zip
+          cd publish
+          zip -r "../$ZIP" .
+          echo "ZIP=$ZIP" >> $GITHUB_OUTPUT
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          files: ${{ steps.get_version.outputs.ZIP }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -16,7 +16,7 @@ using Color = Baker76.Imaging.Color;
 using Image = Baker76.Imaging.Image;
 using Bitmap = Baker76.Imaging.Bitmap;
 using Baker76.Core.IO;
-using JeremyAnsel.ColorQuant;
+using Baker76.ColorQuant;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -164,7 +164,7 @@ namespace Crunchy
                 Image originalBitmap = null;
 
                 if (extension == ".png")
-                    originalBitmap = Baker76.Imaging.PngReader.Read(image.FileName);
+                    originalBitmap = Baker76.Imaging.Pngcs.PngReader.Read(image.FileName);
                 else if (extension == ".bmp")
                     originalBitmap = Bitmap.Read(image.FileName);
 
@@ -661,7 +661,7 @@ namespace Crunchy
                 string fileName = textureNode.Name + ".png";
                 string path = Path.Combine(Settings.File.OutputFolder, fileName);
 
-                Baker76.Imaging.PngWriter.Write(path, textureImage);
+                Baker76.Imaging.Pngcs.PngWriter.Write(path, textureImage);
                 //Bmp.TryWrite(Path.ChangeExtension(textureNode.Path, "bmp"), textureImage);
 
                 textureList.Add(textureNode);

@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Baker76.ColorQuant;
+using Baker76.Imaging;
+using Baker76.Pngcs;
+using RetroStudio.Core.Plugin;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using System.Diagnostics;
-using JeremyAnsel.ColorQuant;
-using Baker76.Imaging;
-using Hjg.Pngcs;
 
 namespace Crunchy
 {
@@ -24,7 +26,9 @@ namespace Crunchy
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            this.Text = this.Text.Replace("[VERSION]", Globals.Version);
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+
+            this.Text = this.Text.Replace("[VERSION]", version.ToString(3));
 
             _backgroundWorker = new BackgroundWorker();
             _backgroundWorker.WorkerReportsProgress = true;

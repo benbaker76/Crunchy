@@ -20,7 +20,6 @@ namespace Crunchy
     public class Globals
     {
         public const int MAX_FOLDERS = 10;
-        public const string Version = "1.0.0";
 
         public static string[] BitDepthStrings
         {

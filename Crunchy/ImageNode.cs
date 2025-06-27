@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Color = Baker76.Imaging.Color;
 using Image = Baker76.Imaging.Image;
 using Bitmap = Baker76.Imaging.Bitmap;
+using Baker76.Imaging.Pngcs;
 
 namespace Crunchy
 {

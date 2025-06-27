@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.IO;
-using System.Drawing;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using Baker76.Imaging;
 using Microsoft.Win32.SafeHandles;
-using System.Linq;
-using static Baker76.Imaging.Aseprite;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Drawing;
 using System.Drawing.Imaging;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
-using System.Diagnostics.Metrics;
-using Baker76.Imaging;
+using System.Windows.Forms;
+using static Baker76.Imaging.Aseprite;
 using static System.Windows.Forms.Design.AxImporter;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace Crunchy
 {
@@ -112,7 +113,9 @@ namespace Crunchy
 
         public static void DisplayHelp()
         {
-            Console.WriteLine("Crunchy v{0}", Globals.Version);
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+
+            Console.WriteLine("Crunchy v{0}", version.ToString(3));
             Console.WriteLine("Usage: Crunch <filename> [-process]\n");
             Console.WriteLine("Options:");
             Console.WriteLine("-h or -?            Display basic help");

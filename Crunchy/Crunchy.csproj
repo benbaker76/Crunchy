@@ -8,11 +8,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+	<ItemGroup>
+		<Content Include="../README.md" Pack="true" PackagePath="\" />
+		<None Include="../LICENSE" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<PackageVersion>1.0.0</PackageVersion>
+	</PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Baker76.Core\src\Baker76.Core\Baker76.Core.csproj" />
-    <ProjectReference Include="..\Baker76.Core\src\Baker76.Imaging\Baker76.Imaging.csproj" />
-    <ProjectReference Include="..\Baker76.Core\src\Hjg.Pngcs\Hjg.Pngcs.csproj" />
-    <ProjectReference Include="..\Baker76.Core\src\JeremyAnsel.ColorQuant\JeremyAnsel.ColorQuant.csproj" />
+    <PackageReference Include="Baker76.ColorQuant" Version="1.0.25" />
+    <PackageReference Include="Baker76.Core" Version="1.0.25" />
+    <PackageReference Include="Baker76.Imaging" Version="1.0.25" />
   </ItemGroup>
 
 </Project>
