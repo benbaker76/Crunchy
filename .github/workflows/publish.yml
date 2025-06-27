@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 permissions:
-  contents: write
+  contents: write      # to create the GitHub Release
   packages: read
 
 jobs:
@@ -46,18 +46,25 @@ jobs:
       - name: Copy data files
         shell: pwsh
         run: |
-          Copy-Item -Path Data\* -Destination "$env:ARTIFACT_ROOT\$env:APP_NAME" -Recurse
+          Copy-Item -Path Data\* -Destination "$env:ARTIFACT_ROOT\$env:APP_NAME" -Recurse -Force
 
       - name: Zip artifacts
         id: zip
         shell: pwsh
         run: |
-          $ver = ${{ steps.get-version.outputs.version }}
+          # grab and clean the version string
+          $ver = '${{ steps.get-version.outputs.version }}'.Trim()
+
+          # build the ZIP name
           $zip = "$env:APP_NAME-$ver.zip"
+
+          # zip up the entire Crunchy/ folder
           Push-Location $env:ARTIFACT_ROOT
           Compress-Archive -Path $env:APP_NAME -DestinationPath "../$zip" -Force
           Pop-Location
-          Write-Output "ZIP=$zip" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+          # export the ZIP name for the next step
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "ZIP=$zip"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
