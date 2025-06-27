@@ -133,7 +133,7 @@ namespace Crunchy
             iniFile.SetValue<int>("General", "ColorCount", options.ColorCount);
             iniFile.SetValue<bool>("General", "AutoPaletteSlot", options.AutoPaletteSlot);
             iniFile.SetValue<bool>("General", "RemapPalette", options.RemapPalette);
-            iniFile.SetValue<int>("Gneeral", "PaletteSlot", options.PaletteSlot);
+            iniFile.SetValue<int>("General", "PaletteSlot", options.PaletteSlot);
             iniFile.SetValue<bool>("General", "TrimBackground", options.TrimBackground);
             iniFile.SetValue("General", "PaletteSlot", options.PaletteSlot);
             iniFile.SetValue<bool>("General", "PaletteSlotAddIndex", options.PaletteSlotAddIndex);
