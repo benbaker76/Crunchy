@@ -11,6 +11,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      APP_NAME: Crunchy
 
     steps:
       - name: Checkout repository
@@ -25,29 +27,32 @@ jobs:
         id: get-version
         uses: kzrnm/get-net-sdk-project-versions-action@v2
         with:
-          proj-path: 'Crunchy/Crunchy.csproj'
+          proj-path: '${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj'
 
       - name: Publish Executable & Dependencies
         run: |
-          dotnet publish Crunchy/Crunchy.csproj \
+          dotnet publish ${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj \
             --configuration Release \
             --output ./publish
 
       - name: Copy data files
         run: |
-          cp -R ./Data ./publish/
+          # copy contents of Data/ into the publish root
+          cp -R ./Data/. ./publish/
 
       - name: Zip artifacts
+        id: zip
         run: |
-          ZIP=release-${{ steps.get-version.outputs.version }}.zip
+          ZIP="${{ env.APP_NAME }}-${{ steps.get-version.outputs.version }}.zip"
           cd publish
           zip -r "../${ZIP}" .
+          echo "ZIP=${ZIP}" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get-version.outputs.version }}
           name: Release ${{ steps.get-version.outputs.version }}
-          files: release-${{ steps.get-version.outputs.version }}.zip
+          files: ${{ steps.zip.outputs.ZIP }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
