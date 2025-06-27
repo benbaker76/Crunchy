@@ -31,26 +31,33 @@ jobs:
           proj-path: '${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj'
 
       - name: Publish EXE + only your DLLs
+        shell: pwsh
         run: |
-          mkdir -p ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }}
-          dotnet publish ${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj \
-            --configuration Release \
-            --output ${{ env.ARTIFACT_ROOT }}/${{ env.APP_NAME }} \
-            /p:EnableWindowsTargeting=true \
+          # ensure the target folder exists
+          New-Item -ItemType Directory -Force -Path "$env:ARTIFACT_ROOT\$env:APP_NAME" | Out-Null
+
+          # framework-dependent Windows publish
+          dotnet publish "$env:APP_NAME\$env:APP_NAME.csproj" `
+            --configuration Release `
+            --output "$env:ARTIFACT_ROOT\$env:APP_NAME" `
+            /p:EnableWindowsTargeting=true `
             /p:SelfContained=false
 
       - name: Copy data files
+        shell: pwsh
         run: |
-          xcopy Data %ARTIFACT_ROOT%\%APP_NAME% /E /I
+          Copy-Item -Path Data\* -Destination "$env:ARTIFACT_ROOT\$env:APP_NAME" -Recurse
 
       - name: Zip artifacts
         id: zip
+        shell: pwsh
         run: |
-          VERSION=${{ steps.get-version.outputs.version }}
-          ZIP="${{ env.APP_NAME }}-${VERSION}.zip"
-          cd ${{ env.ARTIFACT_ROOT }}
-          zip -r "../${ZIP}" "${{ env.APP_NAME }}"
-          echo "ZIP=${ZIP}" >> $GITHUB_OUTPUT
+          $ver = ${{ steps.get-version.outputs.version }}
+          $zip = "$env:APP_NAME-$ver.zip"
+          Push-Location $env:ARTIFACT_ROOT
+          Compress-Archive -Path $env:APP_NAME -DestinationPath "../$zip" -Force
+          Pop-Location
+          Write-Output "ZIP=$zip" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
