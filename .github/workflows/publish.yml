@@ -33,19 +33,19 @@ jobs:
         run: |
           dotnet publish ${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj \
             --configuration Release \
-            --output ./publish
+            --output ./${{ env.APP_NAME }}
 
       - name: Copy data files
         run: |
-          # copy contents of Data/ into the publish root
-          cp -R ./Data/. ./publish/
+          # copy contents of Data/ into the app folder
+          cp -R ./Data/. ./${{ env.APP_NAME }}/
 
       - name: Zip artifacts
         id: zip
         run: |
-          ZIP="${{ env.APP_NAME }}-${{ steps.get-version.outputs.version }}.zip"
-          cd publish
-          zip -r "../${ZIP}" .
+          VERSION=${{ steps.get-version.outputs.version }}
+          ZIP="${APP_NAME}-${VERSION}.zip"
+          zip -r "${ZIP}" "${APP_NAME}"
           echo "ZIP=${ZIP}" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
