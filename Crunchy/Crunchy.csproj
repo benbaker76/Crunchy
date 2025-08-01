@@ -24,9 +24,9 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Baker76.ColorQuant" Version="1.0.25" />
-    <PackageReference Include="Baker76.Core" Version="1.0.25" />
-    <PackageReference Include="Baker76.Imaging" Version="1.0.25" />
+    <PackageReference Include="Baker76.ColorQuant" Version="1.0.30" />
+    <PackageReference Include="Baker76.Core" Version="1.0.30" />
+    <PackageReference Include="Baker76.Imaging" Version="1.0.30" />
   </ItemGroup>
 
 </Project>

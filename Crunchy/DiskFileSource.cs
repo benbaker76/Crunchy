@@ -17,7 +17,7 @@ namespace Crunchy
 
         public string Name => Path.GetFileName(_filePath);
 
-        public Stream OpenReadStream(long maxAllowedSize = 512000)
+        public Stream OpenReadestream(long maxAllowedSize = 512000)
         {
             return new FileStream(_filePath, FileMode.Open, FileAccess.Read);
         }

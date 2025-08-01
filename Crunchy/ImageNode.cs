@@ -142,7 +142,7 @@ namespace Crunchy
 
             using (var memoryStream = new MemoryStream())
             {
-                await file.OpenReadStream(1024 * 1024 * 1024).CopyToAsync(memoryStream);
+                await file.OpenReadestream(1024 * 1024 * 1024).CopyToAsync(memoryStream);
 
                 memoryStream.Position = 0;
 
@@ -202,7 +202,7 @@ namespace Crunchy
 
                     using (var memoryStream = new MemoryStream())
                     {
-                        await file.OpenReadStream(1024 * 1024 * 1024).CopyToAsync(memoryStream);
+                        await file.OpenReadestream(1024 * 1024 * 1024).CopyToAsync(memoryStream);
 
                         memoryStream.Position = 0;
 

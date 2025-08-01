@@ -1,7 +1,6 @@
 ﻿using Baker76.ColorQuant;
 using Baker76.Imaging;
 using Baker76.Pngcs;
-using RetroStudio.Core.Plugin;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -227,6 +226,12 @@ namespace Crunchy
         {
             using (frmSpriteSlicer frmSpriteSlicer = new frmSpriteSlicer())
                 frmSpriteSlicer.ShowDialog(this);
+        }
+
+        private void mnuSpriteSheetStripper_Click(object sender, EventArgs e)
+        {
+            using (frmSpriteStripper frmSpriteStripper = new frmSpriteStripper())
+                frmSpriteStripper.ShowDialog(this);
         }
 
         private void cboInputFolder_SelectedIndexChanged(object sender, EventArgs e)

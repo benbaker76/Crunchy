@@ -24,8 +24,8 @@ namespace Crunchy
 			Size spacingSize = new Size(System.Convert.ToInt32(spacingWidth.Text), System.Convert.ToInt32(spacingHeight.Text));
             Size outputSize = chkUseTrimSize.Checked ? inputSize : new Size(System.Convert.ToInt32(outputWidth.Text), System.Convert.ToInt32(outputHeight.Text));
 
-            Image srcImage = PngReader.Read(openFileDialog.FileName);
-            Image[] images = Baker76.Imaging.Utility.SpriteSheetSplicer(srcImage, inputSize, marginSize, spacingSize, outputSize, chkAutoTrim.Checked, chkUseTrimSize.Checked, 0, false, 0);
+            Image sourceImage = PngReader.Read(openFileDialog.FileName);
+            Image[] images = Baker76.Imaging.Utility.SpriteSheetSplicer(sourceImage, inputSize, marginSize, spacingSize, outputSize, chkAutoTrim.Checked, chkUseTrimSize.Checked, 0, false, 0);
 
             for (int i = 0; i < images.Length; i++)
             {

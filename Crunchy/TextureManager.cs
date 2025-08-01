@@ -371,10 +371,10 @@ namespace Crunchy
             for (int i = 0; i < imageList.Count; i++)
             {
                 ImageNode image = imageList[i];
-                Rectangle srcRectangle = new Rectangle(0, 0, image.Width, image.Height);
+                Rectangle sourceRectangle = new Rectangle(0, 0, image.Width, image.Height);
                 Point position = Point.Empty;
 
-                if (rectanglePacker.FindPoint(srcRectangle.Size, ref position))
+                if (rectanglePacker.FindPoint(sourceRectangle.Size, ref position))
                 {
                     image.X = position.X;
                     image.Y = position.Y;
@@ -544,34 +544,34 @@ namespace Crunchy
             {
                 ImageNode image = imageList[i];
                 Image bitmap = image.Image;
-                Rectangle srcRectangle = new Rectangle(Point.Empty, bitmap.Size);
-                Rectangle dstRectangle = new Rectangle(image.X, image.Y, bitmap.Width, bitmap.Height);
+                Rectangle sourceRectangle = new Rectangle(Point.Empty, bitmap.Size);
+                Rectangle destRectangle = new Rectangle(image.X, image.Y, bitmap.Width, bitmap.Height);
 
                 if (settings.AutoPosition)
                 {
-                    int dstWidth = bitmap.Width, imageCount = 1;
+                    int destWidth = bitmap.Width, imageCount = 1;
 
-                    dstRectangle.Intersect(outputRectangle);
-                    dstWidth -= dstRectangle.Width;
+                    destRectangle.Intersect(outputRectangle);
+                    destWidth -= destRectangle.Width;
 
-                    outputBitmap.DrawImage(bitmap, dstRectangle, srcRectangle);
+                    outputBitmap.DrawImage(bitmap, destRectangle, sourceRectangle);
 
-                    while (dstWidth > 0)
+                    while (destWidth > 0)
                     {
-                        srcRectangle = new Rectangle(bitmap.Width - dstWidth, 0, dstWidth, bitmap.Height);
-                        dstRectangle = new Rectangle(0, image.Y + bitmap.Height * imageCount, dstWidth, bitmap.Height);
+                        sourceRectangle = new Rectangle(bitmap.Width - destWidth, 0, destWidth, bitmap.Height);
+                        destRectangle = new Rectangle(0, image.Y + bitmap.Height * imageCount, destWidth, bitmap.Height);
 
-                        dstRectangle.Intersect(outputRectangle);
-                        dstWidth -= dstRectangle.Width;
+                        destRectangle.Intersect(outputRectangle);
+                        destWidth -= destRectangle.Width;
 
-                        outputBitmap.DrawImage(bitmap, dstRectangle, srcRectangle);
+                        outputBitmap.DrawImage(bitmap, destRectangle, sourceRectangle);
 
                         imageCount++;
                     }
                 }
                 else
                 {
-                    outputBitmap.DrawImage(bitmap, dstRectangle, srcRectangle);
+                    outputBitmap.DrawImage(bitmap, destRectangle, sourceRectangle);
                 }
 
                 image.Image = null;

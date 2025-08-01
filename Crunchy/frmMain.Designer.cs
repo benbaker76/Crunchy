@@ -29,742 +29,794 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            this.grpFolders = new System.Windows.Forms.GroupBox();
-            this.cboInputFolder = new System.Windows.Forms.ComboBox();
-            this.chkRecursive = new System.Windows.Forms.CheckBox();
-            this.butInputFolder = new System.Windows.Forms.Button();
-            this.txtInputFolder = new System.Windows.Forms.TextBox();
-            this.grpTextureOptions = new System.Windows.Forms.GroupBox();
-            this.chkAutoSizeTexture = new System.Windows.Forms.CheckBox();
-            this.lblColorDistance = new System.Windows.Forms.Label();
-            this.cboColorDistance = new System.Windows.Forms.ComboBox();
-            this.lblBitDepth = new System.Windows.Forms.Label();
-            this.cboBitDepth = new System.Windows.Forms.ComboBox();
-            this.chkFillSpacing = new System.Windows.Forms.CheckBox();
-            this.chkMultiTexture = new System.Windows.Forms.CheckBox();
-            this.lblSpacing = new System.Windows.Forms.Label();
-            this.txtSpacing = new System.Windows.Forms.TextBox();
-            this.lblTextureHeight = new System.Windows.Forms.Label();
-            this.txtTextureHeight = new System.Windows.Forms.TextBox();
-            this.lblTextureWidth = new System.Windows.Forms.Label();
-            this.txtTextureWidth = new System.Windows.Forms.TextBox();
-            this.butColor = new System.Windows.Forms.Button();
-            this.rdoColorBackground = new System.Windows.Forms.RadioButton();
-            this.rdoAlphaBackground = new System.Windows.Forms.RadioButton();
-            this.butGo = new System.Windows.Forms.Button();
-            this.grpImageOptions = new System.Windows.Forms.GroupBox();
-            this.chkPaletteSlotAddIndex = new System.Windows.Forms.CheckBox();
-            this.cboColorCount = new System.Windows.Forms.ComboBox();
-            this.lblColors = new System.Windows.Forms.Label();
-            this.nudPaletteSlot = new System.Windows.Forms.NumericUpDown();
-            this.chkAutoPaletteSlot = new System.Windows.Forms.CheckBox();
-            this.chkQuantize = new System.Windows.Forms.CheckBox();
-            this.lblPaletteSlot = new System.Windows.Forms.Label();
-            this.chkTrimBackground = new System.Windows.Forms.CheckBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSaveAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSpriteSheetSlicer = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
-            this.grpOutputOptions = new System.Windows.Forms.GroupBox();
-            this.cboFileFormat = new System.Windows.Forms.ComboBox();
-            this.lblOutputFolder = new System.Windows.Forms.Label();
-            this.butOutputFolder = new System.Windows.Forms.Button();
-            this.txtOutputFolder = new System.Windows.Forms.TextBox();
-            this.lblFileFormat = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.lblName = new System.Windows.Forms.Label();
-            this.grpInputPalette = new System.Windows.Forms.GroupBox();
-            this.butInputPalette = new System.Windows.Forms.Button();
-            this.txtInputPalette = new System.Windows.Forms.TextBox();
-            this.grpBackgroundOptions = new System.Windows.Forms.GroupBox();
-            this.chkReplaceBackgroundColor = new System.Windows.Forms.CheckBox();
-            this.rdoIndexBackground = new System.Windows.Forms.RadioButton();
-            this.txtBackgroundIndex = new System.Windows.Forms.TextBox();
-            this.lblbaker76 = new System.Windows.Forms.Label();
-            this.chkRemapPalette = new System.Windows.Forms.CheckBox();
-            this.grpFolders.SuspendLayout();
-            this.grpTextureOptions.SuspendLayout();
-            this.grpImageOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPaletteSlot)).BeginInit();
-            this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.grpOutputOptions.SuspendLayout();
-            this.grpInputPalette.SuspendLayout();
-            this.grpBackgroundOptions.SuspendLayout();
-            this.SuspendLayout();
+            grpFolders = new GroupBox();
+            cboInputFolder = new ComboBox();
+            chkRecursive = new CheckBox();
+            butInputFolder = new Button();
+            txtInputFolder = new TextBox();
+            grpTextureOptions = new GroupBox();
+            chkAutoSizeTexture = new CheckBox();
+            lblColorDistance = new Label();
+            cboColorDistance = new ComboBox();
+            lblBitDepth = new Label();
+            cboBitDepth = new ComboBox();
+            chkFillSpacing = new CheckBox();
+            chkMultiTexture = new CheckBox();
+            lblSpacing = new Label();
+            txtSpacing = new TextBox();
+            lblTextureHeight = new Label();
+            txtTextureHeight = new TextBox();
+            lblTextureWidth = new Label();
+            txtTextureWidth = new TextBox();
+            butColor = new Button();
+            rdoColorBackground = new RadioButton();
+            rdoAlphaBackground = new RadioButton();
+            butGo = new Button();
+            grpImageOptions = new GroupBox();
+            chkRemapPalette = new CheckBox();
+            chkPaletteSlotAddIndex = new CheckBox();
+            cboColorCount = new ComboBox();
+            lblColors = new Label();
+            nudPaletteSlot = new NumericUpDown();
+            chkAutoPaletteSlot = new CheckBox();
+            chkQuantize = new CheckBox();
+            lblPaletteSlot = new Label();
+            chkTrimBackground = new CheckBox();
+            menuStrip1 = new MenuStrip();
+            mnuFile = new ToolStripMenuItem();
+            mnuOpen = new ToolStripMenuItem();
+            mnuSave = new ToolStripMenuItem();
+            mnuSaveAs = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripSeparator();
+            mnuExit = new ToolStripMenuItem();
+            mnuTools = new ToolStripMenuItem();
+            mnuSpriteSheetSlicer = new ToolStripMenuItem();
+            mnuSpriteSheetStripper = new ToolStripMenuItem();
+            statusStrip1 = new StatusStrip();
+            toolStripStatusLabel1 = new ToolStripStatusLabel();
+            tspbProgress = new ToolStripProgressBar();
+            grpOutputOptions = new GroupBox();
+            cboFileFormat = new ComboBox();
+            lblOutputFolder = new Label();
+            butOutputFolder = new Button();
+            txtOutputFolder = new TextBox();
+            lblFileFormat = new Label();
+            txtName = new TextBox();
+            lblName = new Label();
+            grpInputPalette = new GroupBox();
+            butInputPalette = new Button();
+            txtInputPalette = new TextBox();
+            grpBackgroundOptions = new GroupBox();
+            chkReplaceBackgroundColor = new CheckBox();
+            rdoIndexBackground = new RadioButton();
+            txtBackgroundIndex = new TextBox();
+            lblbaker76 = new Label();
+            grpFolders.SuspendLayout();
+            grpTextureOptions.SuspendLayout();
+            grpImageOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudPaletteSlot).BeginInit();
+            menuStrip1.SuspendLayout();
+            statusStrip1.SuspendLayout();
+            grpOutputOptions.SuspendLayout();
+            grpInputPalette.SuspendLayout();
+            grpBackgroundOptions.SuspendLayout();
+            SuspendLayout();
             // 
             // grpFolders
             // 
-            this.grpFolders.Controls.Add(this.cboInputFolder);
-            this.grpFolders.Controls.Add(this.chkRecursive);
-            this.grpFolders.Controls.Add(this.butInputFolder);
-            this.grpFolders.Controls.Add(this.txtInputFolder);
-            this.grpFolders.Location = new System.Drawing.Point(12, 27);
-            this.grpFolders.Name = "grpFolders";
-            this.grpFolders.Size = new System.Drawing.Size(508, 84);
-            this.grpFolders.TabIndex = 1;
-            this.grpFolders.TabStop = false;
-            this.grpFolders.Text = "Input Folder(s)";
+            grpFolders.Controls.Add(cboInputFolder);
+            grpFolders.Controls.Add(chkRecursive);
+            grpFolders.Controls.Add(butInputFolder);
+            grpFolders.Controls.Add(txtInputFolder);
+            grpFolders.Location = new Point(14, 31);
+            grpFolders.Margin = new Padding(4, 3, 4, 3);
+            grpFolders.Name = "grpFolders";
+            grpFolders.Padding = new Padding(4, 3, 4, 3);
+            grpFolders.Size = new Size(593, 97);
+            grpFolders.TabIndex = 1;
+            grpFolders.TabStop = false;
+            grpFolders.Text = "Input Folder(s)";
             // 
             // cboInputFolder
             // 
-            this.cboInputFolder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboInputFolder.FormattingEnabled = true;
-            this.cboInputFolder.Location = new System.Drawing.Point(17, 22);
-            this.cboInputFolder.Name = "cboInputFolder";
-            this.cboInputFolder.Size = new System.Drawing.Size(74, 21);
-            this.cboInputFolder.TabIndex = 0;
-            this.cboInputFolder.SelectedIndexChanged += new System.EventHandler(this.cboInputFolder_SelectedIndexChanged);
+            cboInputFolder.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboInputFolder.FormattingEnabled = true;
+            cboInputFolder.Location = new Point(20, 25);
+            cboInputFolder.Margin = new Padding(4, 3, 4, 3);
+            cboInputFolder.Name = "cboInputFolder";
+            cboInputFolder.Size = new Size(86, 23);
+            cboInputFolder.TabIndex = 0;
+            cboInputFolder.SelectedIndexChanged += cboInputFolder_SelectedIndexChanged;
             // 
             // chkRecursive
             // 
-            this.chkRecursive.AutoSize = true;
-            this.chkRecursive.Location = new System.Drawing.Point(17, 54);
-            this.chkRecursive.Name = "chkRecursive";
-            this.chkRecursive.Size = new System.Drawing.Size(156, 17);
-            this.chkRecursive.TabIndex = 3;
-            this.chkRecursive.Text = "Recursive Directory Search";
-            this.chkRecursive.UseVisualStyleBackColor = true;
-            this.chkRecursive.CheckedChanged += new System.EventHandler(this.chkRecursive_CheckedChanged);
+            chkRecursive.AutoSize = true;
+            chkRecursive.Location = new Point(20, 62);
+            chkRecursive.Margin = new Padding(4, 3, 4, 3);
+            chkRecursive.Name = "chkRecursive";
+            chkRecursive.Size = new Size(165, 19);
+            chkRecursive.TabIndex = 3;
+            chkRecursive.Text = "Recursive Directory Search";
+            chkRecursive.UseVisualStyleBackColor = true;
+            chkRecursive.CheckedChanged += chkRecursive_CheckedChanged;
             // 
             // butInputFolder
             // 
-            this.butInputFolder.Location = new System.Drawing.Point(449, 23);
-            this.butInputFolder.Name = "butInputFolder";
-            this.butInputFolder.Size = new System.Drawing.Size(39, 20);
-            this.butInputFolder.TabIndex = 2;
-            this.butInputFolder.Text = "...";
-            this.butInputFolder.UseVisualStyleBackColor = true;
-            this.butInputFolder.Click += new System.EventHandler(this.butInputFolder_Click);
+            butInputFolder.Location = new Point(524, 27);
+            butInputFolder.Margin = new Padding(4, 3, 4, 3);
+            butInputFolder.Name = "butInputFolder";
+            butInputFolder.Size = new Size(46, 23);
+            butInputFolder.TabIndex = 2;
+            butInputFolder.Text = "...";
+            butInputFolder.UseVisualStyleBackColor = true;
+            butInputFolder.Click += butInputFolder_Click;
             // 
             // txtInputFolder
             // 
-            this.txtInputFolder.Location = new System.Drawing.Point(97, 23);
-            this.txtInputFolder.Name = "txtInputFolder";
-            this.txtInputFolder.Size = new System.Drawing.Size(342, 20);
-            this.txtInputFolder.TabIndex = 1;
-            this.txtInputFolder.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtInputFolder.TextChanged += new System.EventHandler(this.txtInputFolder_TextChanged);
+            txtInputFolder.Location = new Point(113, 27);
+            txtInputFolder.Margin = new Padding(4, 3, 4, 3);
+            txtInputFolder.Name = "txtInputFolder";
+            txtInputFolder.Size = new Size(398, 23);
+            txtInputFolder.TabIndex = 1;
+            txtInputFolder.TextAlign = HorizontalAlignment.Right;
+            txtInputFolder.TextChanged += txtInputFolder_TextChanged;
             // 
             // grpTextureOptions
             // 
-            this.grpTextureOptions.Controls.Add(this.chkAutoSizeTexture);
-            this.grpTextureOptions.Controls.Add(this.lblColorDistance);
-            this.grpTextureOptions.Controls.Add(this.cboColorDistance);
-            this.grpTextureOptions.Controls.Add(this.lblBitDepth);
-            this.grpTextureOptions.Controls.Add(this.cboBitDepth);
-            this.grpTextureOptions.Controls.Add(this.chkFillSpacing);
-            this.grpTextureOptions.Controls.Add(this.chkMultiTexture);
-            this.grpTextureOptions.Controls.Add(this.lblSpacing);
-            this.grpTextureOptions.Controls.Add(this.txtSpacing);
-            this.grpTextureOptions.Controls.Add(this.lblTextureHeight);
-            this.grpTextureOptions.Controls.Add(this.txtTextureHeight);
-            this.grpTextureOptions.Controls.Add(this.lblTextureWidth);
-            this.grpTextureOptions.Controls.Add(this.txtTextureWidth);
-            this.grpTextureOptions.Location = new System.Drawing.Point(13, 279);
-            this.grpTextureOptions.Name = "grpTextureOptions";
-            this.grpTextureOptions.Size = new System.Drawing.Size(508, 83);
-            this.grpTextureOptions.TabIndex = 4;
-            this.grpTextureOptions.TabStop = false;
-            this.grpTextureOptions.Text = "Texture Options";
+            grpTextureOptions.Controls.Add(chkAutoSizeTexture);
+            grpTextureOptions.Controls.Add(lblColorDistance);
+            grpTextureOptions.Controls.Add(cboColorDistance);
+            grpTextureOptions.Controls.Add(lblBitDepth);
+            grpTextureOptions.Controls.Add(cboBitDepth);
+            grpTextureOptions.Controls.Add(chkFillSpacing);
+            grpTextureOptions.Controls.Add(chkMultiTexture);
+            grpTextureOptions.Controls.Add(lblSpacing);
+            grpTextureOptions.Controls.Add(txtSpacing);
+            grpTextureOptions.Controls.Add(lblTextureHeight);
+            grpTextureOptions.Controls.Add(txtTextureHeight);
+            grpTextureOptions.Controls.Add(lblTextureWidth);
+            grpTextureOptions.Controls.Add(txtTextureWidth);
+            grpTextureOptions.Location = new Point(15, 322);
+            grpTextureOptions.Margin = new Padding(4, 3, 4, 3);
+            grpTextureOptions.Name = "grpTextureOptions";
+            grpTextureOptions.Padding = new Padding(4, 3, 4, 3);
+            grpTextureOptions.Size = new Size(593, 96);
+            grpTextureOptions.TabIndex = 4;
+            grpTextureOptions.TabStop = false;
+            grpTextureOptions.Text = "Texture Options";
             // 
             // chkAutoSizeTexture
             // 
-            this.chkAutoSizeTexture.AutoSize = true;
-            this.chkAutoSizeTexture.Location = new System.Drawing.Point(224, 21);
-            this.chkAutoSizeTexture.Name = "chkAutoSizeTexture";
-            this.chkAutoSizeTexture.Size = new System.Drawing.Size(71, 17);
-            this.chkAutoSizeTexture.TabIndex = 12;
-            this.chkAutoSizeTexture.Text = "Auto Size";
-            this.chkAutoSizeTexture.UseVisualStyleBackColor = true;
-            this.chkAutoSizeTexture.CheckedChanged += new System.EventHandler(this.chkAutoSizeTexture_CheckedChanged);
+            chkAutoSizeTexture.AutoSize = true;
+            chkAutoSizeTexture.Location = new Point(261, 24);
+            chkAutoSizeTexture.Margin = new Padding(4, 3, 4, 3);
+            chkAutoSizeTexture.Name = "chkAutoSizeTexture";
+            chkAutoSizeTexture.Size = new Size(75, 19);
+            chkAutoSizeTexture.TabIndex = 12;
+            chkAutoSizeTexture.Text = "Auto Size";
+            chkAutoSizeTexture.UseVisualStyleBackColor = true;
+            chkAutoSizeTexture.CheckedChanged += chkAutoSizeTexture_CheckedChanged;
             // 
             // lblColorDistance
             // 
-            this.lblColorDistance.AutoSize = true;
-            this.lblColorDistance.Location = new System.Drawing.Point(79, 49);
-            this.lblColorDistance.Name = "lblColorDistance";
-            this.lblColorDistance.Size = new System.Drawing.Size(79, 13);
-            this.lblColorDistance.TabIndex = 7;
-            this.lblColorDistance.Text = "Color Distance:";
+            lblColorDistance.AutoSize = true;
+            lblColorDistance.Location = new Point(92, 57);
+            lblColorDistance.Margin = new Padding(4, 0, 4, 0);
+            lblColorDistance.Name = "lblColorDistance";
+            lblColorDistance.Size = new Size(87, 15);
+            lblColorDistance.TabIndex = 7;
+            lblColorDistance.Text = "Color Distance:";
             // 
             // cboColorDistance
             // 
-            this.cboColorDistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboColorDistance.FormattingEnabled = true;
-            this.cboColorDistance.Location = new System.Drawing.Point(164, 45);
-            this.cboColorDistance.Name = "cboColorDistance";
-            this.cboColorDistance.Size = new System.Drawing.Size(99, 21);
-            this.cboColorDistance.TabIndex = 8;
-            this.cboColorDistance.SelectedIndexChanged += new System.EventHandler(this.cboColorDistance_SelectedIndexChanged);
+            cboColorDistance.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboColorDistance.FormattingEnabled = true;
+            cboColorDistance.Location = new Point(191, 52);
+            cboColorDistance.Margin = new Padding(4, 3, 4, 3);
+            cboColorDistance.Name = "cboColorDistance";
+            cboColorDistance.Size = new Size(115, 23);
+            cboColorDistance.TabIndex = 8;
+            cboColorDistance.SelectedIndexChanged += cboColorDistance_SelectedIndexChanged;
             // 
             // lblBitDepth
             // 
-            this.lblBitDepth.AutoSize = true;
-            this.lblBitDepth.Location = new System.Drawing.Point(106, 23);
-            this.lblBitDepth.Name = "lblBitDepth";
-            this.lblBitDepth.Size = new System.Drawing.Size(54, 13);
-            this.lblBitDepth.TabIndex = 1;
-            this.lblBitDepth.Text = "Bit Depth:";
+            lblBitDepth.AutoSize = true;
+            lblBitDepth.Location = new Point(124, 27);
+            lblBitDepth.Margin = new Padding(4, 0, 4, 0);
+            lblBitDepth.Name = "lblBitDepth";
+            lblBitDepth.Size = new Size(59, 15);
+            lblBitDepth.TabIndex = 1;
+            lblBitDepth.Text = "Bit Depth:";
             // 
             // cboBitDepth
             // 
-            this.cboBitDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboBitDepth.FormattingEnabled = true;
-            this.cboBitDepth.Location = new System.Drawing.Point(164, 17);
-            this.cboBitDepth.Name = "cboBitDepth";
-            this.cboBitDepth.Size = new System.Drawing.Size(44, 21);
-            this.cboBitDepth.TabIndex = 2;
-            this.cboBitDepth.SelectedIndexChanged += new System.EventHandler(this.cboBitDepth_SelectedIndexChanged);
+            cboBitDepth.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboBitDepth.FormattingEnabled = true;
+            cboBitDepth.Location = new Point(191, 20);
+            cboBitDepth.Margin = new Padding(4, 3, 4, 3);
+            cboBitDepth.Name = "cboBitDepth";
+            cboBitDepth.Size = new Size(51, 23);
+            cboBitDepth.TabIndex = 2;
+            cboBitDepth.SelectedIndexChanged += cboBitDepth_SelectedIndexChanged;
             // 
             // chkFillSpacing
             // 
-            this.chkFillSpacing.AutoSize = true;
-            this.chkFillSpacing.Location = new System.Drawing.Point(407, 49);
-            this.chkFillSpacing.Name = "chkFillSpacing";
-            this.chkFillSpacing.Size = new System.Drawing.Size(80, 17);
-            this.chkFillSpacing.TabIndex = 11;
-            this.chkFillSpacing.Text = "Fill Spacing";
-            this.chkFillSpacing.UseVisualStyleBackColor = true;
-            this.chkFillSpacing.CheckedChanged += new System.EventHandler(this.chkFillSpacing_CheckedChanged);
+            chkFillSpacing.AutoSize = true;
+            chkFillSpacing.Location = new Point(475, 57);
+            chkFillSpacing.Margin = new Padding(4, 3, 4, 3);
+            chkFillSpacing.Name = "chkFillSpacing";
+            chkFillSpacing.Size = new Size(86, 19);
+            chkFillSpacing.TabIndex = 11;
+            chkFillSpacing.Text = "Fill Spacing";
+            chkFillSpacing.UseVisualStyleBackColor = true;
+            chkFillSpacing.CheckedChanged += chkFillSpacing_CheckedChanged;
             // 
             // chkMultiTexture
             // 
-            this.chkMultiTexture.AutoSize = true;
-            this.chkMultiTexture.Location = new System.Drawing.Point(13, 22);
-            this.chkMultiTexture.Name = "chkMultiTexture";
-            this.chkMultiTexture.Size = new System.Drawing.Size(87, 17);
-            this.chkMultiTexture.TabIndex = 0;
-            this.chkMultiTexture.Text = "Multi Texture";
-            this.chkMultiTexture.UseVisualStyleBackColor = true;
-            this.chkMultiTexture.CheckedChanged += new System.EventHandler(this.chkMultiTexture_CheckedChanged);
+            chkMultiTexture.AutoSize = true;
+            chkMultiTexture.Location = new Point(15, 25);
+            chkMultiTexture.Margin = new Padding(4, 3, 4, 3);
+            chkMultiTexture.Name = "chkMultiTexture";
+            chkMultiTexture.Size = new Size(95, 19);
+            chkMultiTexture.TabIndex = 0;
+            chkMultiTexture.Text = "Multi Texture";
+            chkMultiTexture.UseVisualStyleBackColor = true;
+            chkMultiTexture.CheckedChanged += chkMultiTexture_CheckedChanged;
             // 
             // lblSpacing
             // 
-            this.lblSpacing.AutoSize = true;
-            this.lblSpacing.Location = new System.Drawing.Point(290, 49);
-            this.lblSpacing.Name = "lblSpacing";
-            this.lblSpacing.Size = new System.Drawing.Size(49, 13);
-            this.lblSpacing.TabIndex = 9;
-            this.lblSpacing.Text = "Spacing:";
+            lblSpacing.AutoSize = true;
+            lblSpacing.Location = new Point(338, 57);
+            lblSpacing.Margin = new Padding(4, 0, 4, 0);
+            lblSpacing.Name = "lblSpacing";
+            lblSpacing.Size = new Size(52, 15);
+            lblSpacing.TabIndex = 9;
+            lblSpacing.Text = "Spacing:";
             // 
             // txtSpacing
             // 
-            this.txtSpacing.Location = new System.Drawing.Point(345, 46);
-            this.txtSpacing.Name = "txtSpacing";
-            this.txtSpacing.Size = new System.Drawing.Size(49, 20);
-            this.txtSpacing.TabIndex = 10;
-            this.txtSpacing.TextChanged += new System.EventHandler(this.txtSpacing_TextChanged);
-            this.txtSpacing.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInteger_KeyPress);
+            txtSpacing.Location = new Point(402, 53);
+            txtSpacing.Margin = new Padding(4, 3, 4, 3);
+            txtSpacing.Name = "txtSpacing";
+            txtSpacing.Size = new Size(56, 23);
+            txtSpacing.TabIndex = 10;
+            txtSpacing.TextChanged += txtSpacing_TextChanged;
+            txtSpacing.KeyPress += txtInteger_KeyPress;
             // 
             // lblTextureHeight
             // 
-            this.lblTextureHeight.AutoSize = true;
-            this.lblTextureHeight.Location = new System.Drawing.Point(397, 22);
-            this.lblTextureHeight.Name = "lblTextureHeight";
-            this.lblTextureHeight.Size = new System.Drawing.Size(41, 13);
-            this.lblTextureHeight.TabIndex = 5;
-            this.lblTextureHeight.Text = "Height:";
+            lblTextureHeight.AutoSize = true;
+            lblTextureHeight.Location = new Point(463, 25);
+            lblTextureHeight.Margin = new Padding(4, 0, 4, 0);
+            lblTextureHeight.Name = "lblTextureHeight";
+            lblTextureHeight.Size = new Size(46, 15);
+            lblTextureHeight.TabIndex = 5;
+            lblTextureHeight.Text = "Height:";
             // 
             // txtTextureHeight
             // 
-            this.txtTextureHeight.Location = new System.Drawing.Point(345, 19);
-            this.txtTextureHeight.Name = "txtTextureHeight";
-            this.txtTextureHeight.Size = new System.Drawing.Size(49, 20);
-            this.txtTextureHeight.TabIndex = 6;
-            this.txtTextureHeight.TextChanged += new System.EventHandler(this.txtTextureHeight_TextChanged);
-            this.txtTextureHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInteger_KeyPress);
+            txtTextureHeight.Location = new Point(402, 22);
+            txtTextureHeight.Margin = new Padding(4, 3, 4, 3);
+            txtTextureHeight.Name = "txtTextureHeight";
+            txtTextureHeight.Size = new Size(56, 23);
+            txtTextureHeight.TabIndex = 6;
+            txtTextureHeight.TextChanged += txtTextureHeight_TextChanged;
+            txtTextureHeight.KeyPress += txtInteger_KeyPress;
             // 
             // lblTextureWidth
             // 
-            this.lblTextureWidth.AutoSize = true;
-            this.lblTextureWidth.Location = new System.Drawing.Point(301, 22);
-            this.lblTextureWidth.Name = "lblTextureWidth";
-            this.lblTextureWidth.Size = new System.Drawing.Size(38, 13);
-            this.lblTextureWidth.TabIndex = 3;
-            this.lblTextureWidth.Text = "Width:";
+            lblTextureWidth.AutoSize = true;
+            lblTextureWidth.Location = new Point(351, 25);
+            lblTextureWidth.Margin = new Padding(4, 0, 4, 0);
+            lblTextureWidth.Name = "lblTextureWidth";
+            lblTextureWidth.Size = new Size(42, 15);
+            lblTextureWidth.TabIndex = 3;
+            lblTextureWidth.Text = "Width:";
             // 
             // txtTextureWidth
             // 
-            this.txtTextureWidth.Location = new System.Drawing.Point(441, 19);
-            this.txtTextureWidth.Name = "txtTextureWidth";
-            this.txtTextureWidth.Size = new System.Drawing.Size(49, 20);
-            this.txtTextureWidth.TabIndex = 4;
-            this.txtTextureWidth.TextChanged += new System.EventHandler(this.txtTextureWidth_TextChanged);
-            this.txtTextureWidth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInteger_KeyPress);
+            txtTextureWidth.Location = new Point(514, 22);
+            txtTextureWidth.Margin = new Padding(4, 3, 4, 3);
+            txtTextureWidth.Name = "txtTextureWidth";
+            txtTextureWidth.Size = new Size(56, 23);
+            txtTextureWidth.TabIndex = 4;
+            txtTextureWidth.TextChanged += txtTextureWidth_TextChanged;
+            txtTextureWidth.KeyPress += txtInteger_KeyPress;
             // 
             // butColor
             // 
-            this.butColor.BackColor = System.Drawing.Color.Magenta;
-            this.butColor.Location = new System.Drawing.Point(153, 22);
-            this.butColor.Name = "butColor";
-            this.butColor.Size = new System.Drawing.Size(34, 21);
-            this.butColor.TabIndex = 2;
-            this.butColor.UseVisualStyleBackColor = false;
-            this.butColor.Click += new System.EventHandler(this.butColorBackground_Click);
+            butColor.BackColor = Color.Magenta;
+            butColor.Location = new Point(178, 25);
+            butColor.Margin = new Padding(4, 3, 4, 3);
+            butColor.Name = "butColor";
+            butColor.Size = new Size(40, 24);
+            butColor.TabIndex = 2;
+            butColor.UseVisualStyleBackColor = false;
+            butColor.Click += butColorBackground_Click;
             // 
             // rdoColorBackground
             // 
-            this.rdoColorBackground.AutoSize = true;
-            this.rdoColorBackground.Location = new System.Drawing.Point(98, 24);
-            this.rdoColorBackground.Name = "rdoColorBackground";
-            this.rdoColorBackground.Size = new System.Drawing.Size(49, 17);
-            this.rdoColorBackground.TabIndex = 1;
-            this.rdoColorBackground.Text = "Color";
-            this.rdoColorBackground.UseVisualStyleBackColor = true;
-            this.rdoColorBackground.CheckedChanged += new System.EventHandler(this.rdoColorBackground_CheckedChanged);
+            rdoColorBackground.AutoSize = true;
+            rdoColorBackground.Location = new Point(114, 28);
+            rdoColorBackground.Margin = new Padding(4, 3, 4, 3);
+            rdoColorBackground.Name = "rdoColorBackground";
+            rdoColorBackground.Size = new Size(54, 19);
+            rdoColorBackground.TabIndex = 1;
+            rdoColorBackground.Text = "Color";
+            rdoColorBackground.UseVisualStyleBackColor = true;
+            rdoColorBackground.CheckedChanged += rdoColorBackground_CheckedChanged;
             // 
             // rdoAlphaBackground
             // 
-            this.rdoAlphaBackground.AutoSize = true;
-            this.rdoAlphaBackground.Checked = true;
-            this.rdoAlphaBackground.Location = new System.Drawing.Point(40, 24);
-            this.rdoAlphaBackground.Name = "rdoAlphaBackground";
-            this.rdoAlphaBackground.Size = new System.Drawing.Size(52, 17);
-            this.rdoAlphaBackground.TabIndex = 0;
-            this.rdoAlphaBackground.TabStop = true;
-            this.rdoAlphaBackground.Text = "Alpha";
-            this.rdoAlphaBackground.UseVisualStyleBackColor = true;
-            this.rdoAlphaBackground.CheckedChanged += new System.EventHandler(this.rdoAlphaBackground_CheckedChanged);
+            rdoAlphaBackground.AutoSize = true;
+            rdoAlphaBackground.Checked = true;
+            rdoAlphaBackground.Location = new Point(47, 28);
+            rdoAlphaBackground.Margin = new Padding(4, 3, 4, 3);
+            rdoAlphaBackground.Name = "rdoAlphaBackground";
+            rdoAlphaBackground.Size = new Size(56, 19);
+            rdoAlphaBackground.TabIndex = 0;
+            rdoAlphaBackground.TabStop = true;
+            rdoAlphaBackground.Text = "Alpha";
+            rdoAlphaBackground.UseVisualStyleBackColor = true;
+            rdoAlphaBackground.CheckedChanged += rdoAlphaBackground_CheckedChanged;
             // 
             // butGo
             // 
-            this.butGo.Location = new System.Drawing.Point(191, 525);
-            this.butGo.Name = "butGo";
-            this.butGo.Size = new System.Drawing.Size(154, 32);
-            this.butGo.TabIndex = 7;
-            this.butGo.Text = "GO!";
-            this.butGo.UseVisualStyleBackColor = true;
-            this.butGo.Click += new System.EventHandler(this.butGo_Click);
+            butGo.Location = new Point(223, 606);
+            butGo.Margin = new Padding(4, 3, 4, 3);
+            butGo.Name = "butGo";
+            butGo.Size = new Size(180, 37);
+            butGo.TabIndex = 7;
+            butGo.Text = "GO!";
+            butGo.UseVisualStyleBackColor = true;
+            butGo.Click += butGo_Click;
             // 
             // grpImageOptions
             // 
-            this.grpImageOptions.Controls.Add(this.chkRemapPalette);
-            this.grpImageOptions.Controls.Add(this.chkPaletteSlotAddIndex);
-            this.grpImageOptions.Controls.Add(this.cboColorCount);
-            this.grpImageOptions.Controls.Add(this.lblColors);
-            this.grpImageOptions.Controls.Add(this.nudPaletteSlot);
-            this.grpImageOptions.Controls.Add(this.chkAutoPaletteSlot);
-            this.grpImageOptions.Controls.Add(this.chkQuantize);
-            this.grpImageOptions.Controls.Add(this.lblPaletteSlot);
-            this.grpImageOptions.Controls.Add(this.chkTrimBackground);
-            this.grpImageOptions.Location = new System.Drawing.Point(13, 431);
-            this.grpImageOptions.Name = "grpImageOptions";
-            this.grpImageOptions.Size = new System.Drawing.Size(508, 80);
-            this.grpImageOptions.TabIndex = 6;
-            this.grpImageOptions.TabStop = false;
-            this.grpImageOptions.Text = "Image Options";
-            // 
-            // chkPaletteSlotAddIndex
-            // 
-            this.chkPaletteSlotAddIndex.AutoSize = true;
-            this.chkPaletteSlotAddIndex.Location = new System.Drawing.Point(427, 47);
-            this.chkPaletteSlotAddIndex.Name = "chkPaletteSlotAddIndex";
-            this.chkPaletteSlotAddIndex.Size = new System.Drawing.Size(74, 17);
-            this.chkPaletteSlotAddIndex.TabIndex = 7;
-            this.chkPaletteSlotAddIndex.Text = "Add Index";
-            this.chkPaletteSlotAddIndex.UseVisualStyleBackColor = true;
-            this.chkPaletteSlotAddIndex.CheckedChanged += new System.EventHandler(this.chkPaletteSlotAddIndex_CheckedChanged);
-            // 
-            // cboColorCount
-            // 
-            this.cboColorCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboColorCount.FormattingEnabled = true;
-            this.cboColorCount.Location = new System.Drawing.Point(186, 42);
-            this.cboColorCount.Name = "cboColorCount";
-            this.cboColorCount.Size = new System.Drawing.Size(56, 21);
-            this.cboColorCount.TabIndex = 2;
-            this.cboColorCount.SelectedIndexChanged += new System.EventHandler(this.cboColorCount_SelectedIndexChanged);
-            // 
-            // lblColors
-            // 
-            this.lblColors.AutoSize = true;
-            this.lblColors.Location = new System.Drawing.Point(248, 47);
-            this.lblColors.Name = "lblColors";
-            this.lblColors.Size = new System.Drawing.Size(36, 13);
-            this.lblColors.TabIndex = 3;
-            this.lblColors.Text = "Colors";
-            // 
-            // nudPaletteSlot
-            // 
-            this.nudPaletteSlot.Location = new System.Drawing.Point(346, 43);
-            this.nudPaletteSlot.Maximum = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
-            this.nudPaletteSlot.Name = "nudPaletteSlot";
-            this.nudPaletteSlot.Size = new System.Drawing.Size(63, 20);
-            this.nudPaletteSlot.TabIndex = 5;
-            this.nudPaletteSlot.ValueChanged += new System.EventHandler(this.nudPaletteSlot_ValueChanged);
-            // 
-            // chkAutoPaletteSlot
-            // 
-            this.chkAutoPaletteSlot.AutoSize = true;
-            this.chkAutoPaletteSlot.Location = new System.Drawing.Point(427, 22);
-            this.chkAutoPaletteSlot.Name = "chkAutoPaletteSlot";
-            this.chkAutoPaletteSlot.Size = new System.Drawing.Size(48, 17);
-            this.chkAutoPaletteSlot.TabIndex = 6;
-            this.chkAutoPaletteSlot.Text = "Auto";
-            this.chkAutoPaletteSlot.UseVisualStyleBackColor = true;
-            this.chkAutoPaletteSlot.CheckedChanged += new System.EventHandler(this.chkAutoPaletteSlot_CheckedChanged);
-            // 
-            // chkQuantize
-            // 
-            this.chkQuantize.AutoSize = true;
-            this.chkQuantize.Location = new System.Drawing.Point(186, 22);
-            this.chkQuantize.Name = "chkQuantize";
-            this.chkQuantize.Size = new System.Drawing.Size(68, 17);
-            this.chkQuantize.TabIndex = 1;
-            this.chkQuantize.Text = "Quantize";
-            this.chkQuantize.UseVisualStyleBackColor = true;
-            this.chkQuantize.CheckedChanged += new System.EventHandler(this.chkQuantize_CheckedChanged);
-            // 
-            // lblPaletteSlot
-            // 
-            this.lblPaletteSlot.AutoSize = true;
-            this.lblPaletteSlot.Location = new System.Drawing.Point(345, 23);
-            this.lblPaletteSlot.Name = "lblPaletteSlot";
-            this.lblPaletteSlot.Size = new System.Drawing.Size(64, 13);
-            this.lblPaletteSlot.TabIndex = 4;
-            this.lblPaletteSlot.Text = "Palette Slot:";
-            // 
-            // chkTrimBackground
-            // 
-            this.chkTrimBackground.AutoSize = true;
-            this.chkTrimBackground.Location = new System.Drawing.Point(17, 22);
-            this.chkTrimBackground.Name = "chkTrimBackground";
-            this.chkTrimBackground.Size = new System.Drawing.Size(107, 17);
-            this.chkTrimBackground.TabIndex = 0;
-            this.chkTrimBackground.Text = "Trim Background";
-            this.chkTrimBackground.UseVisualStyleBackColor = true;
-            this.chkTrimBackground.CheckedChanged += new System.EventHandler(this.chkTrimBackground_CheckedChanged);
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFile,
-            this.mnuTools});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(533, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // mnuFile
-            // 
-            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOpen,
-            this.mnuSave,
-            this.mnuSaveAs,
-            this.toolStripMenuItem1,
-            this.mnuExit});
-            this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(37, 20);
-            this.mnuFile.Text = "File";
-            // 
-            // mnuOpen
-            // 
-            this.mnuOpen.Name = "mnuOpen";
-            this.mnuOpen.Size = new System.Drawing.Size(123, 22);
-            this.mnuOpen.Text = "Open";
-            this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
-            // 
-            // mnuSave
-            // 
-            this.mnuSave.Name = "mnuSave";
-            this.mnuSave.Size = new System.Drawing.Size(123, 22);
-            this.mnuSave.Text = "Save";
-            this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
-            // 
-            // mnuSaveAs
-            // 
-            this.mnuSaveAs.Name = "mnuSaveAs";
-            this.mnuSaveAs.Size = new System.Drawing.Size(123, 22);
-            this.mnuSaveAs.Text = "Save As...";
-            this.mnuSaveAs.Click += new System.EventHandler(this.mnuSaveAs_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(120, 6);
-            // 
-            // mnuExit
-            // 
-            this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(123, 22);
-            this.mnuExit.Text = "Exit";
-            this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
-            // 
-            // mnuTools
-            // 
-            this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuSpriteSheetSlicer});
-            this.mnuTools.Name = "mnuTools";
-            this.mnuTools.Size = new System.Drawing.Size(46, 20);
-            this.mnuTools.Text = "Tools";
-            // 
-            // mnuSpriteSheetSlicer
-            // 
-            this.mnuSpriteSheetSlicer.Name = "mnuSpriteSheetSlicer";
-            this.mnuSpriteSheetSlicer.Size = new System.Drawing.Size(167, 22);
-            this.mnuSpriteSheetSlicer.Text = "Sprite Sheet Slicer";
-            this.mnuSpriteSheetSlicer.Click += new System.EventHandler(this.mnuSpriteSheetSlicer_Click);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.tspbProgress});
-            this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 571);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(533, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 9;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
-            // 
-            // tspbProgress
-            // 
-            this.tspbProgress.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tspbProgress.Name = "tspbProgress";
-            this.tspbProgress.Size = new System.Drawing.Size(100, 16);
-            // 
-            // grpOutputOptions
-            // 
-            this.grpOutputOptions.Controls.Add(this.cboFileFormat);
-            this.grpOutputOptions.Controls.Add(this.lblOutputFolder);
-            this.grpOutputOptions.Controls.Add(this.butOutputFolder);
-            this.grpOutputOptions.Controls.Add(this.txtOutputFolder);
-            this.grpOutputOptions.Controls.Add(this.lblFileFormat);
-            this.grpOutputOptions.Controls.Add(this.txtName);
-            this.grpOutputOptions.Controls.Add(this.lblName);
-            this.grpOutputOptions.Location = new System.Drawing.Point(13, 182);
-            this.grpOutputOptions.Name = "grpOutputOptions";
-            this.grpOutputOptions.Size = new System.Drawing.Size(508, 91);
-            this.grpOutputOptions.TabIndex = 3;
-            this.grpOutputOptions.TabStop = false;
-            this.grpOutputOptions.Text = "Output Options";
-            // 
-            // cboFileFormat
-            // 
-            this.cboFileFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboFileFormat.FormattingEnabled = true;
-            this.cboFileFormat.Location = new System.Drawing.Point(331, 19);
-            this.cboFileFormat.Name = "cboFileFormat";
-            this.cboFileFormat.Size = new System.Drawing.Size(107, 21);
-            this.cboFileFormat.TabIndex = 3;
-            this.cboFileFormat.SelectedIndexChanged += new System.EventHandler(this.cboFileFormat_SelectedIndexChanged);
-            // 
-            // lblOutputFolder
-            // 
-            this.lblOutputFolder.AutoSize = true;
-            this.lblOutputFolder.Location = new System.Drawing.Point(10, 54);
-            this.lblOutputFolder.Name = "lblOutputFolder";
-            this.lblOutputFolder.Size = new System.Drawing.Size(39, 13);
-            this.lblOutputFolder.TabIndex = 4;
-            this.lblOutputFolder.Text = "Folder:";
-            // 
-            // butOutputFolder
-            // 
-            this.butOutputFolder.Location = new System.Drawing.Point(451, 51);
-            this.butOutputFolder.Name = "butOutputFolder";
-            this.butOutputFolder.Size = new System.Drawing.Size(39, 20);
-            this.butOutputFolder.TabIndex = 6;
-            this.butOutputFolder.Text = "...";
-            this.butOutputFolder.UseVisualStyleBackColor = true;
-            this.butOutputFolder.Click += new System.EventHandler(this.butOutputFolder_Click);
-            // 
-            // txtOutputFolder
-            // 
-            this.txtOutputFolder.Location = new System.Drawing.Point(55, 51);
-            this.txtOutputFolder.Name = "txtOutputFolder";
-            this.txtOutputFolder.Size = new System.Drawing.Size(386, 20);
-            this.txtOutputFolder.TabIndex = 5;
-            this.txtOutputFolder.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtOutputFolder.TextChanged += new System.EventHandler(this.txtOutputFolder_TextChanged);
-            // 
-            // lblFileFormat
-            // 
-            this.lblFileFormat.AutoSize = true;
-            this.lblFileFormat.Location = new System.Drawing.Point(261, 24);
-            this.lblFileFormat.Name = "lblFileFormat";
-            this.lblFileFormat.Size = new System.Drawing.Size(61, 13);
-            this.lblFileFormat.TabIndex = 2;
-            this.lblFileFormat.Text = "File Format:";
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(55, 21);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(199, 20);
-            this.txtName.TabIndex = 1;
-            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-            // 
-            // lblName
-            // 
-            this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(11, 24);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(38, 13);
-            this.lblName.TabIndex = 0;
-            this.lblName.Text = "Name:";
-            // 
-            // grpInputPalette
-            // 
-            this.grpInputPalette.Controls.Add(this.butInputPalette);
-            this.grpInputPalette.Controls.Add(this.txtInputPalette);
-            this.grpInputPalette.Location = new System.Drawing.Point(12, 117);
-            this.grpInputPalette.Name = "grpInputPalette";
-            this.grpInputPalette.Size = new System.Drawing.Size(508, 59);
-            this.grpInputPalette.TabIndex = 2;
-            this.grpInputPalette.TabStop = false;
-            this.grpInputPalette.Text = "Input Palette";
-            // 
-            // butInputPalette
-            // 
-            this.butInputPalette.Location = new System.Drawing.Point(449, 23);
-            this.butInputPalette.Name = "butInputPalette";
-            this.butInputPalette.Size = new System.Drawing.Size(39, 20);
-            this.butInputPalette.TabIndex = 1;
-            this.butInputPalette.Text = "...";
-            this.butInputPalette.UseVisualStyleBackColor = true;
-            this.butInputPalette.Click += new System.EventHandler(this.butInputPalette_Click);
-            // 
-            // txtInputPalette
-            // 
-            this.txtInputPalette.Location = new System.Drawing.Point(17, 23);
-            this.txtInputPalette.Name = "txtInputPalette";
-            this.txtInputPalette.Size = new System.Drawing.Size(422, 20);
-            this.txtInputPalette.TabIndex = 0;
-            this.txtInputPalette.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtInputPalette.TextChanged += new System.EventHandler(this.txtInputPalette_TextChanged);
-            // 
-            // grpBackgroundOptions
-            // 
-            this.grpBackgroundOptions.Controls.Add(this.chkReplaceBackgroundColor);
-            this.grpBackgroundOptions.Controls.Add(this.rdoIndexBackground);
-            this.grpBackgroundOptions.Controls.Add(this.butColor);
-            this.grpBackgroundOptions.Controls.Add(this.txtBackgroundIndex);
-            this.grpBackgroundOptions.Controls.Add(this.rdoAlphaBackground);
-            this.grpBackgroundOptions.Controls.Add(this.rdoColorBackground);
-            this.grpBackgroundOptions.Location = new System.Drawing.Point(13, 368);
-            this.grpBackgroundOptions.Name = "grpBackgroundOptions";
-            this.grpBackgroundOptions.Size = new System.Drawing.Size(508, 57);
-            this.grpBackgroundOptions.TabIndex = 5;
-            this.grpBackgroundOptions.TabStop = false;
-            this.grpBackgroundOptions.Text = "Background Options";
-            // 
-            // chkReplaceBackgroundColor
-            // 
-            this.chkReplaceBackgroundColor.AutoSize = true;
-            this.chkReplaceBackgroundColor.Location = new System.Drawing.Point(329, 25);
-            this.chkReplaceBackgroundColor.Name = "chkReplaceBackgroundColor";
-            this.chkReplaceBackgroundColor.Size = new System.Drawing.Size(154, 17);
-            this.chkReplaceBackgroundColor.TabIndex = 8;
-            this.chkReplaceBackgroundColor.Text = "Replace Background Color";
-            this.chkReplaceBackgroundColor.UseVisualStyleBackColor = true;
-            this.chkReplaceBackgroundColor.CheckedChanged += new System.EventHandler(this.chkReplaceBackgroundColor_CheckedChanged);
-            // 
-            // rdoIndexBackground
-            // 
-            this.rdoIndexBackground.AutoSize = true;
-            this.rdoIndexBackground.Location = new System.Drawing.Point(200, 24);
-            this.rdoIndexBackground.Name = "rdoIndexBackground";
-            this.rdoIndexBackground.Size = new System.Drawing.Size(51, 17);
-            this.rdoIndexBackground.TabIndex = 3;
-            this.rdoIndexBackground.Text = "Index";
-            this.rdoIndexBackground.UseVisualStyleBackColor = true;
-            this.rdoIndexBackground.CheckedChanged += new System.EventHandler(this.rdoIndexBackground_CheckedChanged);
-            // 
-            // txtBackgroundIndex
-            // 
-            this.txtBackgroundIndex.Location = new System.Drawing.Point(257, 23);
-            this.txtBackgroundIndex.Name = "txtBackgroundIndex";
-            this.txtBackgroundIndex.Size = new System.Drawing.Size(63, 20);
-            this.txtBackgroundIndex.TabIndex = 4;
-            this.txtBackgroundIndex.TextChanged += new System.EventHandler(this.txtBackgroundIndex_TextChanged);
-            // 
-            // lblbaker76
-            // 
-            this.lblbaker76.AutoSize = true;
-            this.lblbaker76.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblbaker76.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblbaker76.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.lblbaker76.Location = new System.Drawing.Point(451, 544);
-            this.lblbaker76.Name = "lblbaker76";
-            this.lblbaker76.Size = new System.Drawing.Size(69, 13);
-            this.lblbaker76.TabIndex = 8;
-            this.lblbaker76.Text = "baker76.com";
-            this.lblbaker76.Click += new System.EventHandler(this.lblbaker76_Click);
+            grpImageOptions.Controls.Add(chkRemapPalette);
+            grpImageOptions.Controls.Add(chkPaletteSlotAddIndex);
+            grpImageOptions.Controls.Add(cboColorCount);
+            grpImageOptions.Controls.Add(lblColors);
+            grpImageOptions.Controls.Add(nudPaletteSlot);
+            grpImageOptions.Controls.Add(chkAutoPaletteSlot);
+            grpImageOptions.Controls.Add(chkQuantize);
+            grpImageOptions.Controls.Add(lblPaletteSlot);
+            grpImageOptions.Controls.Add(chkTrimBackground);
+            grpImageOptions.Location = new Point(15, 497);
+            grpImageOptions.Margin = new Padding(4, 3, 4, 3);
+            grpImageOptions.Name = "grpImageOptions";
+            grpImageOptions.Padding = new Padding(4, 3, 4, 3);
+            grpImageOptions.Size = new Size(593, 92);
+            grpImageOptions.TabIndex = 6;
+            grpImageOptions.TabStop = false;
+            grpImageOptions.Text = "Image Options";
             // 
             // chkRemapPalette
             // 
-            this.chkRemapPalette.AutoSize = true;
-            this.chkRemapPalette.Location = new System.Drawing.Point(17, 44);
-            this.chkRemapPalette.Name = "chkRemapPalette";
-            this.chkRemapPalette.Size = new System.Drawing.Size(96, 17);
-            this.chkRemapPalette.TabIndex = 2;
-            this.chkRemapPalette.Text = "Remap Palette";
-            this.chkRemapPalette.UseVisualStyleBackColor = true;
-            this.chkRemapPalette.CheckedChanged += new System.EventHandler(this.chkRemapPalette_CheckedChanged);
+            chkRemapPalette.AutoSize = true;
+            chkRemapPalette.Location = new Point(20, 51);
+            chkRemapPalette.Margin = new Padding(4, 3, 4, 3);
+            chkRemapPalette.Name = "chkRemapPalette";
+            chkRemapPalette.Size = new Size(102, 19);
+            chkRemapPalette.TabIndex = 2;
+            chkRemapPalette.Text = "Remap Palette";
+            chkRemapPalette.UseVisualStyleBackColor = true;
+            chkRemapPalette.CheckedChanged += chkRemapPalette_CheckedChanged;
+            // 
+            // chkPaletteSlotAddIndex
+            // 
+            chkPaletteSlotAddIndex.AutoSize = true;
+            chkPaletteSlotAddIndex.Location = new Point(498, 54);
+            chkPaletteSlotAddIndex.Margin = new Padding(4, 3, 4, 3);
+            chkPaletteSlotAddIndex.Name = "chkPaletteSlotAddIndex";
+            chkPaletteSlotAddIndex.Size = new Size(79, 19);
+            chkPaletteSlotAddIndex.TabIndex = 7;
+            chkPaletteSlotAddIndex.Text = "Add Index";
+            chkPaletteSlotAddIndex.UseVisualStyleBackColor = true;
+            chkPaletteSlotAddIndex.CheckedChanged += chkPaletteSlotAddIndex_CheckedChanged;
+            // 
+            // cboColorCount
+            // 
+            cboColorCount.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboColorCount.FormattingEnabled = true;
+            cboColorCount.Location = new Point(217, 48);
+            cboColorCount.Margin = new Padding(4, 3, 4, 3);
+            cboColorCount.Name = "cboColorCount";
+            cboColorCount.Size = new Size(65, 23);
+            cboColorCount.TabIndex = 2;
+            cboColorCount.SelectedIndexChanged += cboColorCount_SelectedIndexChanged;
+            // 
+            // lblColors
+            // 
+            lblColors.AutoSize = true;
+            lblColors.Location = new Point(289, 54);
+            lblColors.Margin = new Padding(4, 0, 4, 0);
+            lblColors.Name = "lblColors";
+            lblColors.Size = new Size(41, 15);
+            lblColors.TabIndex = 3;
+            lblColors.Text = "Colors";
+            // 
+            // nudPaletteSlot
+            // 
+            nudPaletteSlot.Location = new Point(404, 50);
+            nudPaletteSlot.Margin = new Padding(4, 3, 4, 3);
+            nudPaletteSlot.Maximum = new decimal(new int[] { 15, 0, 0, 0 });
+            nudPaletteSlot.Name = "nudPaletteSlot";
+            nudPaletteSlot.Size = new Size(74, 23);
+            nudPaletteSlot.TabIndex = 5;
+            nudPaletteSlot.ValueChanged += nudPaletteSlot_ValueChanged;
+            // 
+            // chkAutoPaletteSlot
+            // 
+            chkAutoPaletteSlot.AutoSize = true;
+            chkAutoPaletteSlot.Location = new Point(498, 25);
+            chkAutoPaletteSlot.Margin = new Padding(4, 3, 4, 3);
+            chkAutoPaletteSlot.Name = "chkAutoPaletteSlot";
+            chkAutoPaletteSlot.Size = new Size(52, 19);
+            chkAutoPaletteSlot.TabIndex = 6;
+            chkAutoPaletteSlot.Text = "Auto";
+            chkAutoPaletteSlot.UseVisualStyleBackColor = true;
+            chkAutoPaletteSlot.CheckedChanged += chkAutoPaletteSlot_CheckedChanged;
+            // 
+            // chkQuantize
+            // 
+            chkQuantize.AutoSize = true;
+            chkQuantize.Location = new Point(217, 25);
+            chkQuantize.Margin = new Padding(4, 3, 4, 3);
+            chkQuantize.Name = "chkQuantize";
+            chkQuantize.Size = new Size(73, 19);
+            chkQuantize.TabIndex = 1;
+            chkQuantize.Text = "Quantize";
+            chkQuantize.UseVisualStyleBackColor = true;
+            chkQuantize.CheckedChanged += chkQuantize_CheckedChanged;
+            // 
+            // lblPaletteSlot
+            // 
+            lblPaletteSlot.AutoSize = true;
+            lblPaletteSlot.Location = new Point(402, 27);
+            lblPaletteSlot.Margin = new Padding(4, 0, 4, 0);
+            lblPaletteSlot.Name = "lblPaletteSlot";
+            lblPaletteSlot.Size = new Size(69, 15);
+            lblPaletteSlot.TabIndex = 4;
+            lblPaletteSlot.Text = "Palette Slot:";
+            // 
+            // chkTrimBackground
+            // 
+            chkTrimBackground.AutoSize = true;
+            chkTrimBackground.Location = new Point(20, 25);
+            chkTrimBackground.Margin = new Padding(4, 3, 4, 3);
+            chkTrimBackground.Name = "chkTrimBackground";
+            chkTrimBackground.Size = new Size(117, 19);
+            chkTrimBackground.TabIndex = 0;
+            chkTrimBackground.Text = "Trim Background";
+            chkTrimBackground.UseVisualStyleBackColor = true;
+            chkTrimBackground.CheckedChanged += chkTrimBackground_CheckedChanged;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { mnuFile, mnuTools });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Padding = new Padding(7, 2, 0, 2);
+            menuStrip1.Size = new Size(622, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // mnuFile
+            // 
+            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuOpen, mnuSave, mnuSaveAs, toolStripMenuItem1, mnuExit });
+            mnuFile.Name = "mnuFile";
+            mnuFile.Size = new Size(37, 20);
+            mnuFile.Text = "File";
+            // 
+            // mnuOpen
+            // 
+            mnuOpen.Name = "mnuOpen";
+            mnuOpen.Size = new Size(123, 22);
+            mnuOpen.Text = "Open";
+            mnuOpen.Click += mnuOpen_Click;
+            // 
+            // mnuSave
+            // 
+            mnuSave.Name = "mnuSave";
+            mnuSave.Size = new Size(123, 22);
+            mnuSave.Text = "Save";
+            mnuSave.Click += mnuSave_Click;
+            // 
+            // mnuSaveAs
+            // 
+            mnuSaveAs.Name = "mnuSaveAs";
+            mnuSaveAs.Size = new Size(123, 22);
+            mnuSaveAs.Text = "Save As...";
+            mnuSaveAs.Click += mnuSaveAs_Click;
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(120, 6);
+            // 
+            // mnuExit
+            // 
+            mnuExit.Name = "mnuExit";
+            mnuExit.Size = new Size(123, 22);
+            mnuExit.Text = "Exit";
+            mnuExit.Click += mnuExit_Click;
+            // 
+            // mnuTools
+            // 
+            mnuTools.DropDownItems.AddRange(new ToolStripItem[] { mnuSpriteSheetSlicer, mnuSpriteSheetStripper });
+            mnuTools.Name = "mnuTools";
+            mnuTools.Size = new Size(47, 20);
+            mnuTools.Text = "Tools";
+            // 
+            // mnuSpriteSheetSlicer
+            // 
+            mnuSpriteSheetSlicer.Name = "mnuSpriteSheetSlicer";
+            mnuSpriteSheetSlicer.Size = new Size(180, 22);
+            mnuSpriteSheetSlicer.Text = "Sprite Sheet Slicer";
+            mnuSpriteSheetSlicer.Click += mnuSpriteSheetSlicer_Click;
+            // 
+            // mnuSpriteSheetStripper
+            // 
+            mnuSpriteSheetStripper.Name = "mnuSpriteSheetStripper";
+            mnuSpriteSheetStripper.Size = new Size(180, 22);
+            mnuSpriteSheetStripper.Text = "Sprite Sheet Stripper";
+            mnuSpriteSheetStripper.Click += mnuSpriteSheetStripper_Click;
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1, tspbProgress });
+            statusStrip1.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            statusStrip1.Location = new Point(0, 660);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Padding = new Padding(1, 0, 16, 0);
+            statusStrip1.Size = new Size(622, 24);
+            statusStrip1.SizingGrip = false;
+            statusStrip1.TabIndex = 9;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new Size(0, 19);
+            // 
+            // tspbProgress
+            // 
+            tspbProgress.Alignment = ToolStripItemAlignment.Right;
+            tspbProgress.Name = "tspbProgress";
+            tspbProgress.Size = new Size(117, 18);
+            // 
+            // grpOutputOptions
+            // 
+            grpOutputOptions.Controls.Add(cboFileFormat);
+            grpOutputOptions.Controls.Add(lblOutputFolder);
+            grpOutputOptions.Controls.Add(butOutputFolder);
+            grpOutputOptions.Controls.Add(txtOutputFolder);
+            grpOutputOptions.Controls.Add(lblFileFormat);
+            grpOutputOptions.Controls.Add(txtName);
+            grpOutputOptions.Controls.Add(lblName);
+            grpOutputOptions.Location = new Point(15, 210);
+            grpOutputOptions.Margin = new Padding(4, 3, 4, 3);
+            grpOutputOptions.Name = "grpOutputOptions";
+            grpOutputOptions.Padding = new Padding(4, 3, 4, 3);
+            grpOutputOptions.Size = new Size(593, 105);
+            grpOutputOptions.TabIndex = 3;
+            grpOutputOptions.TabStop = false;
+            grpOutputOptions.Text = "Output Options";
+            // 
+            // cboFileFormat
+            // 
+            cboFileFormat.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboFileFormat.FormattingEnabled = true;
+            cboFileFormat.Location = new Point(386, 22);
+            cboFileFormat.Margin = new Padding(4, 3, 4, 3);
+            cboFileFormat.Name = "cboFileFormat";
+            cboFileFormat.Size = new Size(124, 23);
+            cboFileFormat.TabIndex = 3;
+            cboFileFormat.SelectedIndexChanged += cboFileFormat_SelectedIndexChanged;
+            // 
+            // lblOutputFolder
+            // 
+            lblOutputFolder.AutoSize = true;
+            lblOutputFolder.Location = new Point(12, 62);
+            lblOutputFolder.Margin = new Padding(4, 0, 4, 0);
+            lblOutputFolder.Name = "lblOutputFolder";
+            lblOutputFolder.Size = new Size(43, 15);
+            lblOutputFolder.TabIndex = 4;
+            lblOutputFolder.Text = "Folder:";
+            // 
+            // butOutputFolder
+            // 
+            butOutputFolder.Location = new Point(526, 59);
+            butOutputFolder.Margin = new Padding(4, 3, 4, 3);
+            butOutputFolder.Name = "butOutputFolder";
+            butOutputFolder.Size = new Size(46, 23);
+            butOutputFolder.TabIndex = 6;
+            butOutputFolder.Text = "...";
+            butOutputFolder.UseVisualStyleBackColor = true;
+            butOutputFolder.Click += butOutputFolder_Click;
+            // 
+            // txtOutputFolder
+            // 
+            txtOutputFolder.Location = new Point(64, 59);
+            txtOutputFolder.Margin = new Padding(4, 3, 4, 3);
+            txtOutputFolder.Name = "txtOutputFolder";
+            txtOutputFolder.Size = new Size(450, 23);
+            txtOutputFolder.TabIndex = 5;
+            txtOutputFolder.TextAlign = HorizontalAlignment.Right;
+            txtOutputFolder.TextChanged += txtOutputFolder_TextChanged;
+            // 
+            // lblFileFormat
+            // 
+            lblFileFormat.AutoSize = true;
+            lblFileFormat.Location = new Point(304, 28);
+            lblFileFormat.Margin = new Padding(4, 0, 4, 0);
+            lblFileFormat.Name = "lblFileFormat";
+            lblFileFormat.Size = new Size(69, 15);
+            lblFileFormat.TabIndex = 2;
+            lblFileFormat.Text = "File Format:";
+            // 
+            // txtName
+            // 
+            txtName.Location = new Point(64, 24);
+            txtName.Margin = new Padding(4, 3, 4, 3);
+            txtName.Name = "txtName";
+            txtName.Size = new Size(231, 23);
+            txtName.TabIndex = 1;
+            txtName.TextChanged += txtName_TextChanged;
+            // 
+            // lblName
+            // 
+            lblName.AutoSize = true;
+            lblName.Location = new Point(13, 28);
+            lblName.Margin = new Padding(4, 0, 4, 0);
+            lblName.Name = "lblName";
+            lblName.Size = new Size(42, 15);
+            lblName.TabIndex = 0;
+            lblName.Text = "Name:";
+            // 
+            // grpInputPalette
+            // 
+            grpInputPalette.Controls.Add(butInputPalette);
+            grpInputPalette.Controls.Add(txtInputPalette);
+            grpInputPalette.Location = new Point(14, 135);
+            grpInputPalette.Margin = new Padding(4, 3, 4, 3);
+            grpInputPalette.Name = "grpInputPalette";
+            grpInputPalette.Padding = new Padding(4, 3, 4, 3);
+            grpInputPalette.Size = new Size(593, 68);
+            grpInputPalette.TabIndex = 2;
+            grpInputPalette.TabStop = false;
+            grpInputPalette.Text = "Input Palette";
+            // 
+            // butInputPalette
+            // 
+            butInputPalette.Location = new Point(524, 27);
+            butInputPalette.Margin = new Padding(4, 3, 4, 3);
+            butInputPalette.Name = "butInputPalette";
+            butInputPalette.Size = new Size(46, 23);
+            butInputPalette.TabIndex = 1;
+            butInputPalette.Text = "...";
+            butInputPalette.UseVisualStyleBackColor = true;
+            butInputPalette.Click += butInputPalette_Click;
+            // 
+            // txtInputPalette
+            // 
+            txtInputPalette.Location = new Point(20, 27);
+            txtInputPalette.Margin = new Padding(4, 3, 4, 3);
+            txtInputPalette.Name = "txtInputPalette";
+            txtInputPalette.Size = new Size(492, 23);
+            txtInputPalette.TabIndex = 0;
+            txtInputPalette.TextAlign = HorizontalAlignment.Right;
+            txtInputPalette.TextChanged += txtInputPalette_TextChanged;
+            // 
+            // grpBackgroundOptions
+            // 
+            grpBackgroundOptions.Controls.Add(chkReplaceBackgroundColor);
+            grpBackgroundOptions.Controls.Add(rdoIndexBackground);
+            grpBackgroundOptions.Controls.Add(butColor);
+            grpBackgroundOptions.Controls.Add(txtBackgroundIndex);
+            grpBackgroundOptions.Controls.Add(rdoAlphaBackground);
+            grpBackgroundOptions.Controls.Add(rdoColorBackground);
+            grpBackgroundOptions.Location = new Point(15, 425);
+            grpBackgroundOptions.Margin = new Padding(4, 3, 4, 3);
+            grpBackgroundOptions.Name = "grpBackgroundOptions";
+            grpBackgroundOptions.Padding = new Padding(4, 3, 4, 3);
+            grpBackgroundOptions.Size = new Size(593, 66);
+            grpBackgroundOptions.TabIndex = 5;
+            grpBackgroundOptions.TabStop = false;
+            grpBackgroundOptions.Text = "Background Options";
+            // 
+            // chkReplaceBackgroundColor
+            // 
+            chkReplaceBackgroundColor.AutoSize = true;
+            chkReplaceBackgroundColor.Location = new Point(384, 29);
+            chkReplaceBackgroundColor.Margin = new Padding(4, 3, 4, 3);
+            chkReplaceBackgroundColor.Name = "chkReplaceBackgroundColor";
+            chkReplaceBackgroundColor.Size = new Size(166, 19);
+            chkReplaceBackgroundColor.TabIndex = 8;
+            chkReplaceBackgroundColor.Text = "Replace Background Color";
+            chkReplaceBackgroundColor.UseVisualStyleBackColor = true;
+            chkReplaceBackgroundColor.CheckedChanged += chkReplaceBackgroundColor_CheckedChanged;
+            // 
+            // rdoIndexBackground
+            // 
+            rdoIndexBackground.AutoSize = true;
+            rdoIndexBackground.Location = new Point(233, 28);
+            rdoIndexBackground.Margin = new Padding(4, 3, 4, 3);
+            rdoIndexBackground.Name = "rdoIndexBackground";
+            rdoIndexBackground.Size = new Size(53, 19);
+            rdoIndexBackground.TabIndex = 3;
+            rdoIndexBackground.Text = "Index";
+            rdoIndexBackground.UseVisualStyleBackColor = true;
+            rdoIndexBackground.CheckedChanged += rdoIndexBackground_CheckedChanged;
+            // 
+            // txtBackgroundIndex
+            // 
+            txtBackgroundIndex.Location = new Point(300, 27);
+            txtBackgroundIndex.Margin = new Padding(4, 3, 4, 3);
+            txtBackgroundIndex.Name = "txtBackgroundIndex";
+            txtBackgroundIndex.Size = new Size(73, 23);
+            txtBackgroundIndex.TabIndex = 4;
+            txtBackgroundIndex.TextChanged += txtBackgroundIndex_TextChanged;
+            // 
+            // lblbaker76
+            // 
+            lblbaker76.AutoSize = true;
+            lblbaker76.Cursor = Cursors.Hand;
+            lblbaker76.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Underline, GraphicsUnit.Point, 0);
+            lblbaker76.ForeColor = SystemColors.Highlight;
+            lblbaker76.Location = new Point(526, 628);
+            lblbaker76.Margin = new Padding(4, 0, 4, 0);
+            lblbaker76.Name = "lblbaker76";
+            lblbaker76.Size = new Size(69, 13);
+            lblbaker76.TabIndex = 8;
+            lblbaker76.Text = "baker76.com";
+            lblbaker76.Click += lblbaker76_Click;
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(533, 593);
-            this.Controls.Add(this.lblbaker76);
-            this.Controls.Add(this.grpBackgroundOptions);
-            this.Controls.Add(this.grpInputPalette);
-            this.Controls.Add(this.grpFolders);
-            this.Controls.Add(this.grpTextureOptions);
-            this.Controls.Add(this.grpOutputOptions);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.grpImageOptions);
-            this.Controls.Add(this.butGo);
-            this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
-            this.MaximizeBox = false;
-            this.Name = "frmMain";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Crunchy v[VERSION]";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
-            this.Load += new System.EventHandler(this.frmMain_Load);
-            this.grpFolders.ResumeLayout(false);
-            this.grpFolders.PerformLayout();
-            this.grpTextureOptions.ResumeLayout(false);
-            this.grpTextureOptions.PerformLayout();
-            this.grpImageOptions.ResumeLayout(false);
-            this.grpImageOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPaletteSlot)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.grpOutputOptions.ResumeLayout(false);
-            this.grpOutputOptions.PerformLayout();
-            this.grpInputPalette.ResumeLayout(false);
-            this.grpInputPalette.PerformLayout();
-            this.grpBackgroundOptions.ResumeLayout(false);
-            this.grpBackgroundOptions.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(622, 684);
+            Controls.Add(lblbaker76);
+            Controls.Add(grpBackgroundOptions);
+            Controls.Add(grpInputPalette);
+            Controls.Add(grpFolders);
+            Controls.Add(grpTextureOptions);
+            Controls.Add(grpOutputOptions);
+            Controls.Add(statusStrip1);
+            Controls.Add(grpImageOptions);
+            Controls.Add(butGo);
+            Controls.Add(menuStrip1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
+            Margin = new Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            Name = "frmMain";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Crunchy v[VERSION]";
+            FormClosing += frmMain_FormClosing;
+            Load += frmMain_Load;
+            grpFolders.ResumeLayout(false);
+            grpFolders.PerformLayout();
+            grpTextureOptions.ResumeLayout(false);
+            grpTextureOptions.PerformLayout();
+            grpImageOptions.ResumeLayout(false);
+            grpImageOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudPaletteSlot).EndInit();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
+            grpOutputOptions.ResumeLayout(false);
+            grpOutputOptions.PerformLayout();
+            grpInputPalette.ResumeLayout(false);
+            grpInputPalette.PerformLayout();
+            grpBackgroundOptions.ResumeLayout(false);
+            grpBackgroundOptions.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -831,6 +883,7 @@
         private System.Windows.Forms.CheckBox chkAutoSizeTexture;
         private System.Windows.Forms.CheckBox chkReplaceBackgroundColor;
         private System.Windows.Forms.CheckBox chkRemapPalette;
+        private ToolStripMenuItem mnuSpriteSheetStripper;
     }
 }
 
